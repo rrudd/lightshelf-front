@@ -1,0 +1,131 @@
+.header {
+  background-color: #36185F;
+  color: white;
+  text-align: center;
+}
+
+.container {
+  max-width: 800px;
+}
+
+.logo {
+  padding-top: 7px;
+  height: 40px;
+}
+
+.first-component{
+  padding: 6rem 0;
+}
+
+.centralize {
+  text-align: center;
+}
+
+.highlight {
+  color: #CC9933;
+}
+
+.thumb-s {
+  max-height: 100px;
+}
+
+.nav {
+  white-space: nowrap;
+}
+
+.nav-btn {
+  display: inline-block;
+  margin: 5px;
+  background-color: #36185F;
+  color: white;
+}
+
+.nav-btn:hover, .nav-btn:focus {
+  background-color: #4f3079;
+  border-color: #bbb;
+  color: white;
+}
+
+button:disabled {
+  opacity: 0.4; !important
+}
+
+.button-primary-netlight {
+  color: white;
+  background-color: #CC9933;
+  border-color: #CC9933;
+}
+
+.button-primary-netlight:hover:enabled, .button-primary-netlight:focus:enabled {
+  color: white;
+  background-color: #af8229;
+  border-color: #af8229;
+}
+
+.card {
+  padding:2rem;
+  box-shadow:0 2px 3px #D1D1D1;
+  background:white;
+  margin: 1rem 0;
+  border-radius:3px;
+  border: 1px solid #D1D1D1;
+}
+
+.card-field {
+  height: 100%;
+  display: inline-block;
+}
+
+/* Status messages */
+.info, .success, .error {
+margin: 10px 0px;
+padding:12px;
+}
+.info {
+    color: #00529B;
+    background-color: #BDE5F8;
+}
+.success {
+    color: #4F8A10;
+    background-color: #DFF2BF;
+}
+.error {
+    color: #D8000C;
+    background-color: #FFBABA;
+}
+.info i, .success i, .error i {
+    margin:10px 22px;
+    font-size:2em;
+    vertical-align:middle;
+}
+
+/* Modal animations */
+
+.ReactModal__Overlay {
+  -webkit-perspective: 600;
+  perspective: 600;
+  opacity: 0;
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+  transition: opacity 150ms ease-out;
+}
+
+.ReactModal__Content {
+  -webkit-transform: all 150ms ease-in;
+}
+
+.ReactModal__Content--after-open {
+  -webkit-transform: all 150ms ease-in;
+  transition: all 150ms ease-in;
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0;
+}
+
+.ReactModal__Content--before-close {
+  -webkit-transform: all 150ms ease-in;
+  transition: all 150ms ease-in;
+}
