@@ -1,0 +1,10 @@
+{
+  "extends": "airbnb",
+  "ecmaFeatures": {
+    "jsx": true
+    },
+  "env": {
+    "es6": true,
+    "jquery": true
+  }
+}
