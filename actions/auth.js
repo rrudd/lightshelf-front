@@ -1,10 +1,10 @@
 import CONSTANTS from '../constants';
-const { AUTHENTICATE, AUTHENTICATION_SUCCESS, AUTHENTICATION_FAILURE } = CONSTANTS;
+const { AUTHENTICATION } = CONSTANTS;
 const BASE_URL = 'http://localhost:3333/api/';
 
 function requestLogin(creds) {
 	return {
-		type: AUTHENTICATE,
+		type: AUTHENTICATION.REQUEST,
 		isRequest: true,
 		isFetching: true,
 		isAuthenticated: false,
@@ -16,7 +16,8 @@ function requestLogin(creds) {
 
 function loginSuccess(user) {
 	return {
-		type: AUTHENTICATION_SUCCESS,
+		type: AUTHENTICATION.RESPONSE,
+		ok: true,
 		isRequest: false,
 		isFetching: false,
 		isAuthenticated: true,
@@ -26,7 +27,8 @@ function loginSuccess(user) {
 
 function loginError(message) {
 	return {
-		type: AUTHENTICATION_FAILURE,
+		type: AUTHENTICATION.RESPONSE,
+		ok: false,
 		isRequest: false,
 		isFetching: false,
 		isAuthenticated: false,
@@ -38,7 +40,7 @@ function authenticate(action) {
   const config = {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `{username=${action.creds.username}&password=${action.creds.password}`
+    body: `username=${action.creds.username}&password=${action.creds.password}`
   };
 
   return (dispatch) => {

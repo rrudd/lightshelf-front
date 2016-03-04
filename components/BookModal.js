@@ -105,5 +105,5 @@ BookModal.propTypes = {
   book: React.PropTypes.object,
   action: React.PropTypes.string,
   isOpen: React.PropTypes.bool,
-  onRequestClose: React.PropTypes.func,
+  onRequestClose: React.PropTypes.func
 };

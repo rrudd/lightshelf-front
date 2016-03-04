@@ -1,27 +1,26 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import SearchField from '../components/SearchField';
 import BookCard from '../components/BookCard';
 import Loader from '../components/Loader';
+import actions from '../actions/search';
 
-export default class Search extends React.Component {
+class Search extends React.Component {
   constructor() {
     super();
-    this.state = { items: [], loading: false };
     this.searchSubmit = this.searchSubmit.bind(this);
   }
 
   searchSubmit(search) {
-    this.setState({ loading: true });
-    const baseUrl = 'https://www.googleapis.com/books/v1/volumes?q=';
-    const searchType = '&printType=books';
-    $.get(baseUrl + encodeURIComponent(search) + searchType, data =>
-      this.setState({ items: data.items, loading: false }));
+    this.props.dispatch(actions.searchGoogle(search));
   }
 
   render() {
-    let results = [];
-    if (this.state.items) {
-      results = this.state.items.map(item =>
+    let results = [],
+        loading =  this.props.status === 'loading';
+
+    if (this.props.items) {
+      results = this.props.items.map(item =>
         <BookCard
           key={item.id}
           item={item.volumeInfo}
@@ -41,9 +40,27 @@ export default class Search extends React.Component {
       <div className="first-component">
         <SearchField searchSubmit={this.searchSubmit}/>
         <div id="resultlist" className="resultlist">
-          {this.state.loading ? <Loader /> : results}
+          {loading ? <Loader /> : results}
         </div>
       </div>
     );
   }
 }
+
+const mapStateToProps = (state)=> {
+      return {
+        status: state.search.status,
+        items: state.search.items
+      }
+    },
+    mapDispatchToProps = (dispatch)=> {
+      return {
+        dispatch
+      }
+    };
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Search)
+
