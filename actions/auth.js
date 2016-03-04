@@ -1,4 +1,5 @@
 import CONSTANTS from '../constants';
+import { hashHistory } from 'react-router'
 const { AUTHENTICATION } = CONSTANTS;
 const BASE_URL = 'http://localhost:3333/api/';
 
@@ -15,6 +16,7 @@ function requestLogin(creds) {
 }
 
 function loginSuccess(user) {
+	hashHistory.push('/');
 	return {
 		type: AUTHENTICATION.RESPONSE,
 		ok: true,
@@ -71,4 +73,3 @@ export default {
 	loginError,
 	authenticate
 }
-
