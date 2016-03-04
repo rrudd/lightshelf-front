@@ -1,20 +1,26 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import Button from '../components/Button';
+import auth from '../actions/auth';
 
-export default class Login extends React.Component {
+class Login extends React.Component {
 
-  handleClick() {
+  onLoginClick() {
     const username = this.refs.username;
     const password = this.refs.password;
+
     const creds = {
       username: username.value.trim(),
-      password: password.value.trim(),
+      password: password.value.trim()
     };
-    dispatch(loginUser(creds));
+
+    let ac = auth.requestLogin(creds);
+    this.props.dispatch(auth.authenticate(ac));
+
   }
 
   render() {
-    const { errorMessage } = this.props;
+    const errorMessage = this.props.message;
 
     return (
       <div className="row first-component centralize">
@@ -37,22 +43,32 @@ export default class Login extends React.Component {
         </div>
         <div className="three columns">
           <Button
-            handleClick={(event) => this.handleClick(event)}
+            handleClick={(event) => this.onLoginClick(event)}
             type="btn btn-netlight-primary"
             icon="fa fa-sign-in"
             text="Login"
           />
         </div>
 
-        {errorMessage &&
-          <p>{errorMessage}</p>
-        }
+        <p>{errorMessage}</p>
+
       </div>
     );
   }
 }
 
-Login.propTypes = {
-  onLoginClick: React.PropTypes.func.isRequired,
-  errorMessage: React.PropTypes.string,
-};
+const mapStateToProps = (state)=> {
+      return {
+        message: state && state.auth && state.auth.message ? state.auth.message : ''
+      }
+    },
+    mapDispatchToProps = (dispatch)=> {
+      return {
+        dispatch
+      }
+    };
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Login)

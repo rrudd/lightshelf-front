@@ -20,16 +20,16 @@ class App extends React.Component {
 App.propTypes = {
   dispatch: React.PropTypes.func.isRequired,
   isAuthenticated: React.PropTypes.bool.isRequired,
-  errorMessage: React.PropTypes.string,
+  errorMessage: React.PropTypes.string
 };
 
 function mapStateToProps(state) {
   const { auth } = state;
-  const { isAuthenticated, errorMessage } = auth;
+  const { isAuthenticated, message } = auth;
 
   return {
     isAuthenticated,
-    errorMessage,
+    message
   };
 }
 

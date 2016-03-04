@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 import api from './middleware/api';
 import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import App from './App';
-import reducers from './reducers/reducers';
+import reducer from './reducers/reducers';
 
 import Welcome from './views/Welcome';
 import Library from './views/Library';
@@ -14,8 +14,8 @@ import Search from './views/Search';
 import Register from './views/Register';
 import Login from './views/Login';
 
-const createStoreWithMiddleware = applyMiddleware(thunk, api)(createStore);
-const store = createStoreWithMiddleware(reducers);
+const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
+const store = createStoreWithMiddleware(reducer);
 
 ReactDOM.render((
   <Provider store={store}>
