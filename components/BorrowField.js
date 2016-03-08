@@ -17,5 +17,5 @@ export default class BorrowField extends React.Component {
 
 BorrowField.propTypes = {
   book_id: React.PropTypes.String,
-  user_id: React.PropTypes.String,
+  user_id: React.PropTypes.String
 };

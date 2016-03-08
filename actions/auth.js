@@ -1,7 +1,7 @@
 import CONSTANTS from '../constants';
-import { hashHistory } from 'react-router'
 const { AUTHENTICATION } = CONSTANTS;
 const BASE_URL = 'http://localhost:3333/api/';
+import go from './router.js';
 
 function requestLogin(creds) {
 	return {
@@ -15,16 +15,19 @@ function requestLogin(creds) {
 	};
 }
 
-function loginSuccess(user) {
-	hashHistory.push('/');
+function loginSuccess(token) {
 	return {
 		type: AUTHENTICATION.RESPONSE,
 		ok: true,
 		isRequest: false,
 		isFetching: false,
 		isAuthenticated: true,
-		token: user.token
+		token: token
 	};
+}
+
+function loginRedirect() {
+	return
 }
 
 function loginError(message) {
@@ -59,10 +62,9 @@ function authenticate(action) {
                 dispatch(loginError(user.message));
                 return Promise.reject(user);
               }
-              // If login was successful, set the token in local storage
-              localStorage.setItem('id_token', user.id_token);
               // Dispatch the success action
-              dispatch(loginSuccess(user));
+              dispatch(loginSuccess(user.token));
+			  dispatch(go('library'));
             }).catch(err => console.log('Error: ', err));
   };
 }

@@ -1,19 +1,16 @@
 import CONSTANTS from '../constants.js';
 const { PERMISSION, AUTHENTICATION } = CONSTANTS;
 
-function initState() {
-	return {
+const initState = {
 		isFetching: false,
-		isAuthenticated: localStorage.getItem('id_token') ? true : false,
-		message: ''
+		isAuthorized: localStorage.getItem('token') ? true : false,
+		message: '',
+		token: localStorage.getItem('token') || ''
 	};
-}
 // The auth reducer. The starting state sets authentication
 // based on a token being in local storage. In a real app,
 // we would also want a util to check if the token is expired.
-function auth( state, action ) {
-
-	if (typeof state === 'undefined') state = initState();
+function auth( state = initState, action = {} ) {
 
 	switch (action.type) {
 		case AUTHENTICATION.REQUEST:
@@ -23,10 +20,14 @@ function auth( state, action ) {
 			});
 		case AUTHENTICATION.RESPONSE:
 			if(action.ok) {
+
+				localStorage.setItem('token', action.token);
+
 				return Object.assign({}, state, {
 					type: PERMISSION.GRANTED,
 					isFetching: false,
-					message: ''
+					message: '',
+					token: action.token
 				});
 			}
 			return Object.assign({}, state, {

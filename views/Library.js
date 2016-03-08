@@ -1,18 +1,18 @@
 import React from 'react';
 import BookCard from '../components/BookCard';
+import { connect } from 'react-redux';
+import actions from '../actions/books.js';
 
-export default class Library extends React.Component {
+class Library extends React.Component {
   constructor() {
     super();
-    this.state = { books: [] };
   }
   componentDidMount() {
-    $.get('http://localhost:3333/api/books', data =>
-      this.setState({ books: data }));
+    this.props.dispatch(actions.list(this.props.token))
   }
   render() {
     let books = [];
-    books = this.state.books.map((book) =>
+    books = this.props.books.map((book) =>
       <BookCard
         key={book.id}
         item={book}
@@ -30,3 +30,18 @@ export default class Library extends React.Component {
     );
   }
 }
+
+
+export default connect(
+    (state)=> {
+      return {
+        books: state.books.books || [],
+        token: state.auth.token
+      }
+    },
+    (dispatch)=> {
+      return {
+        dispatch
+      }
+    }
+)(Library);

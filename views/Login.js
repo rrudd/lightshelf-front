@@ -5,6 +5,12 @@ import auth from '../actions/auth';
 
 class Login extends React.Component {
 
+  componentWillMount() {
+    if(this.props.isAuthorized) {
+      this.props.dispatch(auth.loginSuccess(this.props.token))
+    }
+  }
+
   onLoginClick() {
     const username = this.refs.username;
     const password = this.refs.password;
@@ -59,7 +65,9 @@ class Login extends React.Component {
 
 const mapStateToProps = (state)=> {
       return {
-        message: state && state.auth && state.auth.message ? state.auth.message : ''
+        isAuthorized: state.auth.isAuthorized || false,
+        message: state.auth.message,
+        token: state.auth.token
       }
     },
     mapDispatchToProps = (dispatch)=> {

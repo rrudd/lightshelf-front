@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
 import auth from './auth';
-import search from './search';
+import books from './books';
+import router from './router';
 
 export default combineReducers({
   auth,
-  search
+  books,
+  router
 });

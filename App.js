@@ -5,7 +5,7 @@ import Header from './components/Header';
 class App extends React.Component {
 
   render() {
-    const { dispatch, isAuthenticated, errorMessage } = this.props;
+    const { dispatch, isAuthorized, message } = this.props;
     return (
       <div>
         <Header />
@@ -19,16 +19,16 @@ class App extends React.Component {
 
 App.propTypes = {
   dispatch: React.PropTypes.func.isRequired,
-  isAuthenticated: React.PropTypes.bool.isRequired,
+  isAuthorized: React.PropTypes.bool.isRequired,
   errorMessage: React.PropTypes.string
 };
 
 function mapStateToProps(state) {
   const { auth } = state;
-  const { isAuthenticated, message } = auth;
+  const { isAuthorized, message } = auth;
 
   return {
-    isAuthenticated,
+    isAuthorized,
     message
   };
 }
