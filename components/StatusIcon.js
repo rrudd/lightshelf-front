@@ -7,7 +7,7 @@ export default class statusIcon extends React.Component {
     let style = {};
     if (this.props.active) {
       icon = 'fa fa-remove';
-      text = `${this.props.user} has borrowed this book.`;
+      text = `Not available.`;
       style = { color: 'red' };
     } else {
       icon = 'fa fa-check';
@@ -29,6 +29,5 @@ export default class statusIcon extends React.Component {
 }
 
 statusIcon.propTypes = {
-  active: React.PropTypes.bool,
-  user: React.PropTypes.string,
+  active: React.PropTypes.bool
 };

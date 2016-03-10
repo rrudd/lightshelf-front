@@ -2,11 +2,10 @@ import React from 'react';
 import Modal from 'react-modal';
 import Button from './button';
 import StatusMessage from './StatusMessage';
-import BorrowField from './borrowField';
 import ModalStyle from '../styles/modal-style';
 import { connect } from 'react-redux';
 import actions from '../actions/books.js';
-const { loan } = actions;
+const { loan, returnBook } = actions;
 
 class BookModal extends React.Component {
   constructor() {
@@ -19,15 +18,16 @@ class BookModal extends React.Component {
   handleConfirmClick() {
     const statusMsg = {};
     if (this.props.action === 'add') {
-      const book = JSON.stringify(this.props.book);
+      const book = this.props.book;
       const url = 'http://localhost:3333/api/books/';
       const request = new Request(url, {
         method: 'POST',
         headers: new Headers({
           Accept: 'application/json',
+          Authorization: 'JWT ' + this.props.token,
           'Content-Type': 'application/json'
         }),
-        body: book
+        body: JSON.stringify(book)
       });
 
       fetch(request).then((response) => {
@@ -40,7 +40,10 @@ class BookModal extends React.Component {
       });
     }
     else if (this.props.action === 'borrow') {
-      this.props.dispatch(loan(this.props.book, this.props.token))
+      this.props.dispatch(loan(this.props.book, this.props.token));
+    }
+    else if (this.props.action === 'return') {
+      this.props.dispatch(returnBook(this.props.book, this.props.loanID, this.props.token));
     }
   }
 
@@ -51,7 +54,6 @@ class BookModal extends React.Component {
 
   render() {
     const actionString = `${this.props.action} `;
-    const field = (this.props.action === 'borrow') ? <BorrowField /> : null;
     let bottomSection = '';
 
     if (this.state.statusMsg) {
@@ -98,7 +100,6 @@ class BookModal extends React.Component {
               {this.props.book.title}
             </span>?
           </h4>
-          {field}
           {bottomSection}
         </div>
       </Modal>
@@ -108,19 +109,20 @@ class BookModal extends React.Component {
 
 BookModal.propTypes = {
   book: React.PropTypes.object,
+  loanID: React.PropTypes.string,
   action: React.PropTypes.string,
   isOpen: React.PropTypes.bool,
   onRequestClose: React.PropTypes.func
 };
 
 export default connect(
-    (state)=> {
+    (state) => {
       return {
         books: state.books,
         token: state.auth.token
       }
     },
-    (dispatch)=> {
+    (dispatch) => {
       return {
         dispatch
       }

@@ -25,13 +25,14 @@ export default class SearchResult extends React.Component {
     book.authors = book.authors ? book.authors : ['Unknown author'];
     book.id = this.props.identifier;
     const authorString = (book.authors !== []) ? book.authors.join(', ') : '';
-    const action = this.props.purpose;
+    let action = this.props.purpose;
     let activeLoan = false;
-    let user = '';
-    if (book.currentLoan && action === 'borrow') {
-      activeLoan = book.currentLoan.active;
-      user = book.currentLoan.user_id;
+
+    if (book.current_loan) {
+      activeLoan = true;
+      action = 'return';
     }
+
     const icon = (action === 'add') ? 'fa fa-plus' : '';
     return (
       <div className="card row" id={book.id}>
@@ -46,14 +47,15 @@ export default class SearchResult extends React.Component {
           <div>{authorString}</div>
         </div>
         <div className="three columns centralize card-field">
-          {action === 'borrow' ? <StatusIcon active={activeLoan} user={user} /> : null}
-          {activeLoan ? null : <Button
+          {action !== 'add' ? <StatusIcon active={activeLoan} /> : null}
+          <Button
             text={action}
             icon={icon}
             handleClick={this.openModal}
-          />}
+          />
           <BookModal
             book={book}
+            loanID = {book.current_loan}
             action={action}
             isOpen={this.state.modalIsOpen}
             onRequestClose={this.closeModal}

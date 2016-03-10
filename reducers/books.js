@@ -2,7 +2,7 @@ import CONSTANTS from '../constants';
 const { BOOKS, LOAN } = CONSTANTS;
 
 const initstate = {
-		stauts: 'nothing'
+		status: 'nothing'
 	};
 
 function _updateItems(state, book) {
@@ -60,4 +60,3 @@ function books( state = initstate, action = {} ) {
 }
 
 export default books;
-
