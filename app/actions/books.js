@@ -98,10 +98,11 @@ function loan(book, token) {
       .then(
       ({ book }) => {
         dispatch(loanSuccess(book));
-				dispatch(go('library'));
+        dispatch(go('library'));
       },
       (error) => {
         dispatch(loanError(error));
+        dispatch(go(''));
       }
     ).catch(err => console.log('Error: ', err));
   };
@@ -154,6 +155,7 @@ function list(token) {
   return (dispatch) => {
     return fetch(API_URL + resource, config)
       .then((resp) => {
+          console.log('hek');
         return resp.json();
       })
       .then(
@@ -162,6 +164,7 @@ function list(token) {
       },
       (error) => {
         dispatch(listError(error));
+        dispatch(go(''));
       }
     ).catch(err => console.log('Error: ', err));
   }

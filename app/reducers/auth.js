@@ -2,7 +2,6 @@ import CONSTANTS from '../constants.js';
 const { PERMISSION, AUTHENTICATION } = CONSTANTS;
 
 const initState = {
-		isFetching: false,
 		isAuthorized: localStorage.getItem('token') ? true : false,
 		message: '',
 		token: localStorage.getItem('token') || ''
@@ -14,27 +13,27 @@ function auth( state = initState, action = {} ) {
 
 	switch (action.type) {
 		case AUTHENTICATION.REQUEST:
-			return Object.assign({}, state, {
+			return {
 				type: AUTHENTICATION.WAITING,
-				isFetching: true
-			});
+				isAuthorized: false
+			};
 		case AUTHENTICATION.RESPONSE:
 			if(action.ok) {
 
 				localStorage.setItem('token', action.token);
 
-				return Object.assign({}, state, {
+				return {
 					type: PERMISSION.GRANTED,
-					isFetching: false,
+					isAuthorized: true,
 					message: '',
 					token: action.token
-				});
+				};
 			}
-			return Object.assign({}, state, {
+			return {
 				type: PERMISSION.DENIED,
-				isFetching: false,
+				isAuthorized: false,
 				message: action.message
-			});
+			};
 		default:
 			return state;
 	}
