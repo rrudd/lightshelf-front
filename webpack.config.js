@@ -6,7 +6,7 @@ var DEBUG = !process.argv.production;
 
 var GLOBALS = {
   'ENV': DEBUG ? '"development"' : '"production"',
-  'API_URL': '"https://lightshelf-api.herokuapp.com/api/"'
+  'API_URL': DEBUG ? '"http://localhost:3333/api/"' : '"https://lightshelf-api.herokuapp.com/api/"'
 };
 
 module.exports = {
