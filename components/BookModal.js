@@ -56,10 +56,10 @@ class BookModal extends React.Component {
     const actionString = `${this.props.action} `;
     let bottomSection = '';
 
-    if (this.state.statusMsg) {
+    if (this.state.status === 'done') {
       bottomSection = (
         <div>
-          <StatusMessage contents={this.state.statusMsg} />
+          <StatusMessage contents={this.state.message} />
           <Button
             text="close"
             handleClick={this.closeModal}

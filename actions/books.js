@@ -1,4 +1,5 @@
 import CONSTANTS from '../constants';
+import go from './router.js';
 const { BOOKS, LOAN } = CONSTANTS;
 const BASE_URL = 'http://localhost:3333/api/';
 const GOOGLE_BASE_URL = 'https://www.googleapis.com/books/v1/volumes?q=';
@@ -45,18 +46,18 @@ function searchGoogle(query, token) {
         ({items}) => {
           dispatch(searchSuccess(items));
         },
-        (error)=> {
+        (error) => {
           dispatch(searchError(error));
         }
       ).catch(err => console.log('Error: ', err));
   };
 }
 
-function loanSuccess(items) {
+function loanSuccess(item) {
   return {
     type: LOAN.RESPONSE,
     ok: true,
-    books: items
+    item
   }
 }
 
@@ -90,14 +91,15 @@ function loan(book, token) {
     dispatch(loaning());
 
     return fetch(BASE_URL + resource + "/" + book._id + "/" + action, config)
-      .then((resp)=> {
+      .then((resp) => {
         return resp.json()
       })
       .then(
-      ({item}) => {
-        dispatch(loanSuccess(item));
+      ({ book }) => {
+        dispatch(loanSuccess(book));
+				dispatch(go('library'));
       },
-      (error)=> {
+      (error) => {
         dispatch(loanError(error));
       }
     ).catch(err => console.log('Error: ', err));
@@ -130,7 +132,8 @@ function returnBook(book, loan_id, token) {
       })
       .then(
       ({ item }) => {
-        dispatch(loanSuccess(item));
+        dispatch(loanSuccess(book));
+				dispatch(go('library'));
       },
       (error) => {
         dispatch(loanError(error));

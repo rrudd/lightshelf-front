@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:3333/api/';
+const BASE_URL = 'https://lightshelf-api.herokuapp.com/api/';
 
 function callApi(endpoint, authenticated) {
   const token = localStorage.getItem('id_token') || null;
