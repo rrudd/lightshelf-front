@@ -2,14 +2,20 @@
   "name": "react-lightshelf",
   "version": "1.0.0",
   "description": "A library app.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "webpack-dev-server -d",
+    "dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js -d",
+    "prod": "./node_modules/webpack/bin/webpack.js -p",
+    "postinstall": "npm run prod",
+    "start": "node server.js",
     "test": "jest"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "copy-webpack-plugin": "^1.1.1",
+    "express": "^4.13.4",
+    "extract-text-webpack-plugin": "^1.0.1",
     "react": "^0.14.7",
     "react-dom": "^0.14.6",
     "react-modal": "^0.6.1",
@@ -19,6 +25,8 @@
     "redux": "^3.3.1",
     "redux-thunk": "^1.0.3",
     "skeleton.css": "^2.0.4",
+    "webpack": "^1.12.1",
+    "webpack-dev-server": "^1.14.1",
     "whatwg-fetch": "^0.11.0"
   },
   "devDependencies": {
@@ -32,8 +40,7 @@
     "eslint-plugin-jasmine": "^1.6.0",
     "eslint-plugin-react": "^3.16.1",
     "jest-cli": "*",
-    "react-addons-test-utils": "~0.14.0",
-    "webpack": "^1.12.1"
+    "react-addons-test-utils": "~0.14.0"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",

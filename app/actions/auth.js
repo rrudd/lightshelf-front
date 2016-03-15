@@ -1,6 +1,5 @@
 import CONSTANTS from '../constants';
 const { AUTHENTICATION } = CONSTANTS;
-const BASE_URL = 'http://localhost:3333/api/';
 import go from './router.js';
 
 function requestLogin(creds) {
@@ -52,7 +51,7 @@ function authenticate(action) {
     // We dispatch requestLogin to kickoff the call to the API
     // dispatch(requestLogin(action.creds));
 
-    return fetch(BASE_URL + 'auth/login', config)
+    return fetch(API_URL + 'auth/login', config)
       .then(response =>
         response.json().then(user => ({ user, response }))
             ).then(({ user, response }) => {

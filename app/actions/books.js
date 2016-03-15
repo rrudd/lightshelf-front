@@ -1,7 +1,6 @@
 import CONSTANTS from '../constants';
 import go from './router.js';
 const { BOOKS, LOAN } = CONSTANTS;
-const BASE_URL = 'http://localhost:3333/api/';
 const GOOGLE_BASE_URL = 'https://www.googleapis.com/books/v1/volumes?q=';
 
 function searchSuccess(items) {
@@ -90,7 +89,9 @@ function loan(book, token) {
 
     dispatch(loaning());
 
-    return fetch(BASE_URL + resource + "/" + book._id + "/" + action, config)
+    let url = API_URL + resource + "/" + book._id + "/" + action;
+
+    return fetch(url, config)
       .then((resp) => {
         return resp.json()
       })
@@ -122,7 +123,7 @@ function returnBook(book, loan_id, token) {
 
     dispatch(loaning());
 
-    return fetch(BASE_URL + resource_1
+    return fetch(API_URL + resource_1
       + '/' + book._id
       + '/' + resource_2
       + '/' + loan_id
@@ -151,7 +152,7 @@ function list(token) {
     resource = 'books';
 
   return (dispatch) => {
-    return fetch(BASE_URL + resource, config)
+    return fetch(API_URL + resource, config)
       .then((resp) => {
         return resp.json();
       })
