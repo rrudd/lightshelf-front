@@ -19,12 +19,6 @@ function searchError(error) {
   }
 }
 
-function searching() {
-  return {
-    type: BOOKS.LOADING
-  }
-}
-
 function searchGoogle(query, token) {
   const config = {
       method: 'GET'
@@ -35,7 +29,9 @@ function searchGoogle(query, token) {
     // We dispatch requestLogin to kickoff the call to the API
     // dispatch(requestLogin(action.creds));
 
-    dispatch(searching());
+    dispatch({
+      type: BOOKS.SEARCH
+    });
 
     return fetch(GOOGLE_BASE_URL + encodeURIComponent(query) + searchType, config)
       .then((resp) => {
@@ -68,12 +64,6 @@ function loanError(error) {
   }
 }
 
-function loaning() {
-  return {
-    type: LOAN.LOADING
-  }
-}
-
 function loan(book, token) {
   const config = {
       method: 'POST',
@@ -87,7 +77,9 @@ function loan(book, token) {
     // We dispatch requestLogin to kickoff the call to the API
     // dispatch(requestLogin(action.creds));
 
-    dispatch(loaning());
+    dispatch({
+      type: LOAN.REQUEST
+    });
 
     let url = API_URL + resource + "/" + book._id + "/" + action;
 
@@ -98,7 +90,6 @@ function loan(book, token) {
       .then(
       ({ book }) => {
         dispatch(loanSuccess(book));
-        dispatch(go('library'));
       },
       (error) => {
         dispatch(loanError(error));
@@ -113,8 +104,8 @@ function returnBook(book, loan_id, token) {
       method: 'POST',
       headers: new Headers({'Authorization': 'JWT ' + token, 'Content-Type': 'application/json' })
     },
-    resource_1 = 'books',
-    resource_2 = 'loans',
+    resource = 'books',
+    subResource = 'loans',
     action = 'return';
 
 
@@ -122,11 +113,13 @@ function returnBook(book, loan_id, token) {
     // We dispatch requestLogin to kickoff the call to the API
     // dispatch(requestLogin(action.creds));
 
-    dispatch(loaning());
+    dispatch({
+      type: LOAN.RETURN
+    });
 
-    return fetch(API_URL + resource_1
+    return fetch( API_URL + resource
       + '/' + book._id
-      + '/' + resource_2
+      + '/' + subResource
       + '/' + loan_id
       + '/' + action, config)
       .then((resp) => {
@@ -134,8 +127,7 @@ function returnBook(book, loan_id, token) {
       })
       .then(
       ({ item }) => {
-        dispatch(loanSuccess(book));
-				dispatch(go('library'));
+        dispatch(loanSuccess(item));
       },
       (error) => {
         dispatch(loanError(error));
@@ -153,9 +145,13 @@ function list(token) {
     resource = 'books';
 
   return (dispatch) => {
+
+    dispatch({
+      type: BOOKS.LIST
+    });
+
     return fetch(API_URL + resource, config)
       .then((resp) => {
-          console.log('hek');
         return resp.json();
       })
       .then(
@@ -166,7 +162,9 @@ function list(token) {
         dispatch(listError(error));
         dispatch(go(''));
       }
-    ).catch(err => console.log('Error: ', err));
+    ).catch((err) => {
+          console.log('Error: ', err)
+        });
   }
 }
 
@@ -186,9 +184,57 @@ function listError(error) {
   }
 }
 
+function add(book, token) {
+
+  return (dispatch)=> {
+
+    dispatch({
+      type: BOOKS.ADD
+    });
+
+    const request = new Request(API_URL + 'books', {
+      method: 'POST',
+      headers: new Headers({
+        Accept: 'application/json',
+        Authorization: 'JWT ' + token,
+        'Content-Type': 'application/json'
+      }),
+      body: JSON.stringify(book)
+    });
+
+    return fetch(request).then((response) => {
+              return response.json();
+            }).then(
+              ({book}) => {
+                dispatch(addSuccess(book));
+              },
+              (error)=> {
+                dispatch(addError(error));
+              }
+          );
+    }
+}
+
+function addSuccess(book) {
+  return {
+    type: BOOKS.RESPONSE,
+    ok: true,
+    book: book
+  }
+}
+
+function addError(error) {
+  return {
+    type: BOOKS.RESPONSE,
+    ok: false,
+    message: error
+  }
+}
+
 export default {
   searchGoogle,
   loan,
   returnBook,
-  list
+  list,
+  add
 }

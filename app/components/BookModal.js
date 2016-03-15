@@ -5,50 +5,34 @@ import StatusMessage from './StatusMessage';
 import ModalStyle from '../styles/modal-style';
 import { connect } from 'react-redux';
 import actions from '../actions/books.js';
-const { loan, returnBook } = actions;
+const { loan, returnBook, add } = actions;
 
 class BookModal extends React.Component {
   constructor() {
     super();
-    this.state = { statusMsg: null };
+    this.state = {
+      confirm: false
+    };
     this.handleConfirmClick = this.handleConfirmClick.bind(this);
     this.closeModal = this.closeModal.bind(this);
   }
 
   handleConfirmClick() {
-    const statusMsg = {};
     if (this.props.action === 'add') {
-      const book = this.props.book;
-      const url = 'http://localhost:3333/api/books/';
-      const request = new Request(url, {
-        method: 'POST',
-        headers: new Headers({
-          Accept: 'application/json',
-          Authorization: 'JWT ' + this.props.token,
-          'Content-Type': 'application/json'
-        }),
-        body: JSON.stringify(book)
-      });
-
-      fetch(request).then((response) => {
-        statusMsg.status = response.ok ? 'success' : 'error';
-        statusMsg.icon = response.ok ? 'fa fa-check' : 'fa fa-exclamation';
-        return response.json();
-      }).then((jso) => {
-        statusMsg.message = jso.message;
-        this.setState({ statusMsg });
-      });
+      this.state.confirm = true;
+      this.props.dispatch(add(this.props.book, this.props.token))
     }
     else if (this.props.action === 'borrow') {
+      this.state.confirm = true;
       this.props.dispatch(loan(this.props.book, this.props.token));
     }
     else if (this.props.action === 'return') {
+      this.state.confirm = true;
       this.props.dispatch(returnBook(this.props.book, this.props.loanID, this.props.token));
     }
   }
 
   closeModal() {
-    this.setState({ statusMsg: null });
     this.props.onRequestClose();
   }
 
@@ -56,10 +40,15 @@ class BookModal extends React.Component {
     const actionString = `${this.props.action} `;
     let bottomSection = '';
 
-    if (this.state.status === 'done') {
+    if (this.state.confirm) {
+      let message = {
+        message: this.props.message || '',
+        status: this.props.status === 'failed' ? 'error' : 'success',
+        icon: this.props.status !== 'failed' ? 'fa fa-check' : 'fa fa-exclamation'
+      };
       bottomSection = (
         <div>
-          <StatusMessage contents={this.state.message} />
+          <StatusMessage contents={message} />
           <Button
             text="close"
             handleClick={this.closeModal}
@@ -118,7 +107,8 @@ BookModal.propTypes = {
 export default connect(
     (state) => {
       return {
-        books: state.books,
+        status: state.books.status,
+        message: state.books.message || '',
         token: state.auth.token
       }
     },

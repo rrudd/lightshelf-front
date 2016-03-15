@@ -39,7 +39,6 @@ class Header extends React.Component {
 
 export default connect(
     (state)=> {
-      console.log('');
       return {
         isAuthorized: state.auth.isAuthorized
       }

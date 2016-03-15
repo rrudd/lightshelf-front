@@ -2,12 +2,14 @@ export default {
   // Action types
   BOOKS: {
     SEARCH:'SEARCH_BOOKS',
+    ADD: 'ADD_BOOK',
     FIND: 'FIND_BOOK',
     LIST: 'LIST_BOOKS',
     LOADING: 'BOOKS_LOADING',
     RESPONSE: 'BOOKS_COMPLETE'
   },
   LOAN: {
+    RETURN: 'LOAN_RETURN',
     REQUEST: 'LOAN_REQUEST',
     RESPONSE: 'LOAN_RESPONSE',
     LOADING: 'LOAN_LOADING'
