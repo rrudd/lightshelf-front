@@ -2,11 +2,11 @@ var webpack = require('webpack');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var path = require('path');
 
-var DEBUG = !process.argv.production;
+var PROD = process.argv[2].indexOf('p') > -1;
 
 var GLOBALS = {
-  'ENV': DEBUG ? '"development"' : '"production"',
-  'API_URL': DEBUG ? '"http://localhost:3333/api/"' : '"https://lightshelf-api.herokuapp.com/api/"'
+  'ENV': !PROD ? '"development"' : '"production"',
+  'API_URL': !PROD ? '"http://localhost:3333/api/"' : '"https://lightshelf-api.herokuapp.com/api/"'
 };
 
 module.exports = {
@@ -34,7 +34,7 @@ module.exports = {
           force: true
         }
       ])
-  ].concat(DEBUG ? [] : [
+  ].concat(!PROD ? [] : [
           new webpack.optimize.UglifyJsPlugin()
       ]),
   devServer: {
