@@ -39,10 +39,10 @@ function books(state = initstate, action = {}) {
 
         let newState = {
           status: 'success',
-          request: state.request
+          request: state.request,
         };
 
-        newState.searchResults = action.searchResults || state.searchResults || [];
+        newState.searchResults = action.searchResults || [];
         newState.books = action.books || state.books || [];
 
         if(action.book) newState.books.push(action.book);

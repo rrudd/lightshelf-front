@@ -16,8 +16,8 @@ class Search extends React.Component {
   }
 
   render() {
-    let results = [],
-        loading =  this.props.status === 'loading';
+    let results = [];
+    let loading = this.props.status === 'loading';
 
     if (this.props.searchResults) {
       results = this.props.searchResults.map(item =>
@@ -64,4 +64,3 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(Search)
-
