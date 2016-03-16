@@ -23,11 +23,19 @@ function books(state = initstate, action = {}) {
   switch (action.type) {
     case BOOKS.SEARCH:
     case BOOKS.LIST:
-    case BOOKS.ADD:
     case LOAN.REQUEST:
     case LOAN.RETURN:
       return {
         status: 'loading',
+        books: state.books || [],
+        searchResults: state.searchResults || [],
+        request: {
+          type: action.type
+        }
+      };
+    case BOOKS.ADD:
+      return {
+        status: 'discreteLoading',
         books: state.books || [],
         searchResults: state.searchResults || [],
         request: {
@@ -39,10 +47,10 @@ function books(state = initstate, action = {}) {
 
         let newState = {
           status: 'success',
-          request: state.request,
+          request: state.request
         };
 
-        newState.searchResults = action.searchResults || [];
+        newState.searchResults = action.searchResults || state.searchResults || [];
         newState.books = action.books || state.books || [];
 
         if(action.book) newState.books.push(action.book);

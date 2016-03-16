@@ -2,21 +2,30 @@ import React from 'react';
 import BookModal from './BookModal';
 import Button from './Button';
 import StatusIcon from './StatusIcon';
+import StatusMessage from './StatusMessage';
+import { connect } from 'react-redux';
+import actions from '../actions/books.js';
+const { loan, returnBook, add } = actions;
 
-export default class SearchResult extends React.Component {
+class SearchResult extends React.Component {
   constructor() {
     super();
-    this.state = { modalIsOpen: false };
-    this.openModal = this.openModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+    this.state = { added: false };
+    this.clickHandler = this.clickHandler.bind(this);
   }
 
-  openModal() {
-    this.setState({ modalIsOpen: true });
-  }
-
-  closeModal() {
-    this.setState({ modalIsOpen: false });
+  clickHandler() {
+    let k = 1;
+    if (this.props.purpose === 'add') {
+      this.setState({added: true});
+      this.props.dispatch(add(this.props.item, this.props.token))
+    }
+    else if (this.props.purpose === 'borrow') {
+      this.props.dispatch(loan(this.props.item, this.props.token));
+    }
+    else if (this.props.purpose === 'return') {
+      this.props.dispatch(returnBook(this.props.item, this.props.item.current_loan, this.props.token));
+    }
   }
 
   render() {
@@ -33,6 +42,11 @@ export default class SearchResult extends React.Component {
       action = 'return';
     }
 
+    let addedMessage = {
+      message: 'Added',
+      icon: 'fa fa-check'
+    };
+
     const icon = (action === 'add') ? 'fa fa-plus' : '';
     return (
       <div className="card row" id={book.id}>
@@ -48,18 +62,12 @@ export default class SearchResult extends React.Component {
         </div>
         <div className="three columns centralize card-field">
           {action !== 'add' ? <StatusIcon active={activeLoan} /> : null}
-          <Button
+          { !this.state.added ? <Button
             text={action}
             icon={icon}
-            handleClick={this.openModal}
-          />
-          <BookModal
-            book={book}
-            loanID = {book.current_loan}
-            action={action}
-            isOpen={this.state.modalIsOpen}
-            onRequestClose={this.closeModal}
-          />
+            handleClick={this.clickHandler}
+            requireConfirm={true}
+          /> : <StatusMessage contents={addedMessage}/>}
         </div>
       </div>
     );
@@ -69,5 +77,19 @@ export default class SearchResult extends React.Component {
 SearchResult.propTypes = {
   item: React.PropTypes.object,
   identifier: React.PropTypes.string,
-  purpose: React.PropTypes.string,
+  purpose: React.PropTypes.string
 };
+
+
+export default connect(
+    (state)=> {
+      return {
+        token: state.auth.token
+      }
+    },
+    (dispatch)=> {
+      return {
+        dispatch
+      }
+    }
+)(SearchResult)
