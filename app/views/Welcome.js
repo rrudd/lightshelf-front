@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import Button from '../components/button';
+import Button from '../components/Button';
 import {connect} from 'react-redux';
 
 class Welcome extends React.Component {

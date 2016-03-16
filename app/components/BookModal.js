@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
-import Button from './button';
+import Button from './Button';
 import StatusMessage from './StatusMessage';
 import ModalStyle from '../styles/modal-style';
 import { connect } from 'react-redux';
