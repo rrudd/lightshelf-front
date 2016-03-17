@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import actions from '../actions/auth';
 const { register } = actions;
+import go from '../actions/router';
 
 class Register extends React.Component {
   constructor() {
@@ -16,6 +17,11 @@ class Register extends React.Component {
     let password = ReactDOM.findDOMNode(this.refs.password).value;
 
     this.props.dispatch(register({ username, password }))
+  }
+
+  onGoToLogin(e) {
+    e.preventDefault();
+    this.props.dispatch(go('login'))
   }
 
   render() {
@@ -46,6 +52,9 @@ class Register extends React.Component {
                 <i className=""></i> Submit
               </button>
             </div>
+          </div>
+          <div className="row">
+            <span>Allready registered? Login <a href="#" onClick={(e)=> this.onGoToLogin(e)}>here</a></span>
           </div>
           <div className="row">{this.props.message}</div>
         </form>

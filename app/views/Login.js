@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import Button from '../components/Button';
 import auth from '../actions/auth';
+import go from '../actions/router';
 
 class Login extends React.Component {
 
@@ -21,7 +22,11 @@ class Login extends React.Component {
     };
 
     this.props.dispatch(auth.login(creds));
+  }
 
+  onGoToRegistration(e) {
+    e.preventDefault();
+    this.props.dispatch(go('register'))
   }
 
   render() {
@@ -30,6 +35,7 @@ class Login extends React.Component {
     return (
       <div className="row first-component centralize">
         <div className="nine columns">
+          <h1>Login</h1>
           <div className="row"></div>
             <input
               type="text"
@@ -54,6 +60,7 @@ class Login extends React.Component {
             text="Login"
           />
         </div>
+        <span>Not registered? Register <a href="#" onClick={(e)=> this.onGoToRegistration(e)}>here</a></span>
 
         <p>{errorMessage}</p>
 

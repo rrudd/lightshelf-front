@@ -29,7 +29,7 @@ class Library extends React.Component {
       <div className="first-component">
         <div id="booklist" className="booklist row">
           <div className="twelve columns">
-            {(loading && books === []) ? <Loader /> : books}
+            {(loading) ? <Loader /> : books}
           </div>
         </div>
       </div>

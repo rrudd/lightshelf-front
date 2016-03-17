@@ -141,7 +141,6 @@ function list(token) {
       },
       (error) => {
         dispatch(listError(error));
-        dispatch(go(''));
       }
     ).catch((err) => console.log('Error: ', err));
   };

@@ -2,7 +2,6 @@ import CONSTANTS from '../constants';
 const { ROUTING } = CONSTANTS;
 
 function go(destination) {
-	console.log(destination);
 	return {
 		type: ROUTING.GO,
 		destination
