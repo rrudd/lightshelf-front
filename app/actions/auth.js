@@ -1,6 +1,7 @@
 import CONSTANTS from '../constants';
 const { AUTHENTICATION } = CONSTANTS;
 import go from './router.js';
+import errorHandler from './error';
 
 function loginSuccess(token) {
 	return {
@@ -10,11 +11,11 @@ function loginSuccess(token) {
 	};
 }
 
-function loginError(message) {
+function loginError(err) {
 	return {
 		type: AUTHENTICATION.LOGIN.RESPONSE,
 		ok: false,
-		message
+		message: err.message
 	};
 }
 
@@ -30,19 +31,19 @@ function login(creds) {
 		// dispatch(requestLogin(action.creds));
 
 		return fetch(API_URL + 'auth/login', config)
-			.then(response =>
-				response.json().then(user => ({ user, response }))
-		).then(({ user, response }) => {
-				if (!response.ok) {
-					// If there was a problem, we want to
-					// dispatch the error condition
-					dispatch(loginError(user.message));
-					return Promise.reject(user);
+			.then((response) => {
+				return errorHandler(response, dispatch)
+			}).then(
+				(resp) => {
+					let w = 1;
+					dispatch( loginSuccess(resp.token) );
+					dispatch( go('library') );
+				},
+				(error)=> {
+					console.log('Error: ', error.message);
+					dispatch( loginError(error) )
 				}
-				// Dispatch the success action
-				dispatch(loginSuccess(user.token));
-				dispatch(go('library'));
-			}).catch(err => console.log('Error: ', err));
+			);
 	};
 }
 

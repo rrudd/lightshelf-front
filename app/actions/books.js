@@ -1,6 +1,7 @@
 import CONSTANTS from '../constants';
-import go from './router.js';
+import go from './router';
 const { BOOKS } = CONSTANTS;
+import errorHandler from './error'
 
 function borrowSuccess(item) {
   return {
@@ -37,7 +38,7 @@ function borrow(book, token) {
     const url = `${API_URL}${resource}/${book._id}/${action}`;
 
     return fetch(url, config)
-      .then((resp) => resp.json())
+      .then((resp) => errorHandler(resp, dispatch))
       .then(
       ({ item }) => {
         dispatch(borrowSuccess(item));
@@ -89,7 +90,7 @@ function returnBook(book, loanID, token) {
     const url = `${API_URL}${resource}/${book._id}/${subResource}/${loanID}/${action}`;
 
     return fetch(url, config)
-      .then((resp) => resp.json())
+      .then((resp) => errorHandler(resp, dispatch))
       .then(
       ({ book }) => {
         dispatch(returnSuccess(book));
@@ -133,7 +134,7 @@ function list(token) {
 
     const url = `${API_URL}${resource}`;
     return fetch(url, config)
-      .then((resp) => resp.json())
+      .then((resp) => errorHandler(resp, dispatch))
       .then(
       (items) => {
         dispatch(listSuccess(items));
@@ -179,7 +180,7 @@ function add(book, token) {
     const url = `${API_URL}books`;
 
     return fetch(url, config)
-      .then((resp) => resp.json())
+      .then((resp) => errorHandler(resp, dispatch))
       .then(
       ({ book }) => {
         dispatch(addSuccess(book));
