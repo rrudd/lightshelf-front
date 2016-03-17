@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import SearchField from '../components/SearchField';
 import BookCard from '../components/BookCard';
 import Loader from '../components/Loader';
@@ -17,7 +17,7 @@ class Search extends React.Component {
 
   render() {
     let results = [];
-    let loading = this.props.status === 'loading';
+    const loading = this.props.status === 'loading';
 
     if (this.props.results) {
       results = this.props.results.map(item =>
@@ -47,20 +47,16 @@ class Search extends React.Component {
   }
 }
 
-const mapStateToProps = (state)=> {
-      return {
-        status: state.search.status,
-        results: state.search.results || [],
-        token: state.auth.token
-      }
-    },
-    mapDispatchToProps = (dispatch)=> {
-      return {
-        dispatch
-      }
-    };
+const mapStateToProps = (state) => ({
+  status: state.search.status,
+  results: state.search.results || [],
+  token: state.auth.token,
+});
+const mapDispatchToProps = (dispatch) => ({
+  dispatch,
+});
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Search)
+)(Search);

@@ -20,7 +20,8 @@ class App extends React.Component {
 App.propTypes = {
   dispatch: React.PropTypes.func.isRequired,
   isAuthorized: React.PropTypes.bool.isRequired,
-  errorMessage: React.PropTypes.string
+  errorMessage: React.PropTypes.string,
+  children: React.PropTypes.node,
 };
 
 function mapStateToProps(state) {
@@ -29,7 +30,7 @@ function mapStateToProps(state) {
 
   return {
     isAuthorized,
-    message
+    message,
   };
 }
 

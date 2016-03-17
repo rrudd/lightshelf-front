@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import Button from '../components/Button';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 class Welcome extends React.Component {
 
@@ -36,9 +36,7 @@ class Welcome extends React.Component {
 }
 
 export default connect(
-    (state)=> {
-      return {
-        isAuthorized: state.auth.isAuthorized
-      }
-    }
+  (state) => ({
+    isAuthorized: state.auth.isAuthorized,
+  })
 )(Welcome);

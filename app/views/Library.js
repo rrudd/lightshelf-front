@@ -10,14 +10,14 @@ class Library extends React.Component {
     super();
   }
   componentDidMount() {
-    if(this.props.status !== CONSTANTS.BOOKS.LIST.SUCCESS) {
-      this.props.dispatch(actions.list(this.props.token))
+    if (this.props.status !== CONSTANTS.BOOKS.LIST.SUCCESS) {
+      this.props.dispatch(actions.list(this.props.token));
     }
   }
 
   render() {
     let books = [];
-    let loading =  this.props.status === 'loading';
+    const loading = this.props.status === 'loading';
     books = this.props.books.map((book) =>
       <BookCard
         key={book.id}
@@ -37,18 +37,13 @@ class Library extends React.Component {
   }
 }
 
-
 export default connect(
-    (state)=> {
-      return {
-        status: state.books.status,
-        books: state.books.books || [],
-        token: state.auth.token
-      }
-    },
-    (dispatch)=> {
-      return {
-        dispatch
-      }
-    }
+  (state) => ({
+    status: state.books.status,
+    books: state.books.books || [],
+    token: state.auth.token,
+  }),
+  (dispatch) => ({
+    dispatch,
+  })
 )(Library);
