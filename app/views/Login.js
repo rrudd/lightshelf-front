@@ -20,8 +20,7 @@ class Login extends React.Component {
       password: password.value.trim()
     };
 
-    let ac = auth.requestLogin(creds);
-    this.props.dispatch(auth.authenticate(ac));
+    this.props.dispatch(auth.login(creds));
 
   }
 

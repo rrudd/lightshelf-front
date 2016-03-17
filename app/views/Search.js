@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import SearchField from '../components/SearchField';
 import BookCard from '../components/BookCard';
 import Loader from '../components/Loader';
-import books from '../actions/books';
+import actions from '../actions/search';
 
 class Search extends React.Component {
   constructor() {
@@ -12,15 +12,15 @@ class Search extends React.Component {
   }
 
   searchSubmit(search) {
-    this.props.dispatch(books.searchGoogle(search, this.props.token));
+    this.props.dispatch(actions.search(search));
   }
 
   render() {
     let results = [];
     let loading = this.props.status === 'loading';
 
-    if (this.props.searchResults) {
-      results = this.props.searchResults.map(item =>
+    if (this.props.results) {
+      results = this.props.results.map(item =>
         <BookCard
           key={item.id}
           item={ item.volumeInfo }
@@ -49,8 +49,8 @@ class Search extends React.Component {
 
 const mapStateToProps = (state)=> {
       return {
-        status: state.books.status,
-        searchResults: state.books.searchResults || [],
+        status: state.search.status,
+        results: state.search.results || [],
         token: state.auth.token
       }
     },

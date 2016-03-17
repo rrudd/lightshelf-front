@@ -1,19 +1,20 @@
 import CONSTANTS from '../constants';
-const { BOOKS, LOAN } = CONSTANTS;
+const { BOOKS } = CONSTANTS;
 
 const initstate = {
-  status: 'nothing'
+  status: 'nothing',
+  books: []
 };
 
-function _updateItems(state, book) {
+function _updateItems(books, newBook) {
+
+  if(typeof(newBook) === 'undefined' || !Array.isArray(books)) return;
+
   function correctItem(item) {
-    return (item._id === book._id);
+    return (item._id === newBook._id);
   }
-  const booksArray = state.books;
-  const idx = booksArray.findIndex(correctItem);
-  booksArray[idx] = book;
-  // const booksObject = Object.assign({}, state.books, { books: booksArray });
-  return Object.assign({}, state, { status: 'done', books: booksArray });
+  const idx = books.findIndex(correctItem);
+  books[idx] = newBook;
 }
 
 // The auth reducer. The starting state sets authentication
@@ -21,60 +22,107 @@ function _updateItems(state, book) {
 // we would also want a util to check if the token is expired.
 function books(state = initstate, action = {}) {
   switch (action.type) {
-    case BOOKS.SEARCH:
-    case BOOKS.LIST:
-    case LOAN.REQUEST:
-    case LOAN.RETURN:
-      return {
-        status: 'loading',
-        books: state.books || [],
-        searchResults: state.searchResults || [],
-        request: {
-          type: action.type
-        }
-      };
-    case BOOKS.ADD:
-      return {
-        status: 'discreteLoading',
-        books: state.books || [],
-        searchResults: state.searchResults || [],
-        request: {
-          type: action.type
-        }
-      };
-    case BOOKS.RESPONSE:
+    // list
+    case BOOKS.LIST.RESPONSE:
       if(action.ok) {
-
-        let newState = {
-          status: 'success',
-          request: state.request
+        return {
+          status: BOOKS.LIST.SUCCESS,
+          books: action.books,
+          message: ''
         };
-
-        newState.searchResults = action.searchResults || state.searchResults || [];
-        newState.books = action.books || state.books || [];
-
-        if(action.book) newState.books.push(action.book);
-
-        return newState;
       }
       return {
-        status: 'failed',
-        message: action.message,
-        books: state.books || [],
-        searchResults: state.searchResults || [],
-        request: state.request
+        status: BOOKS.LIST.FAILED,
+        message: action.message || 'Unknown error',
+        books: state.books || []
       };
-    case LOAN.RESPONSE:
+
+    case BOOKS.LIST.REQUEST:
+      return {
+        action: BOOKS.LIST.REQUEST,
+        status: 'loading'
+      };
+
+
+    // add
+    case BOOKS.ADD.RESPONSE:
       if(action.ok) {
-        return _updateItems(state, action.item)
+
+        _updateItems(state.books, action.item);
+
+        return {
+          status: BOOKS.ADD.SUCCESS,
+          books: state.books,
+          message: ''
+        };
       }
+
       return {
-        status: 'failed',
-        message: action.message,
-        books: state.books || [],
-        searchResults: state.searchResults || [],
-        request: state.request
+        status: BOOKS.ADD.FAILED,
+        message: action.message || 'Unknown error',
+        books: state.books || []
       };
+    case BOOKS.ADD.REQUEST:
+      return {
+        action: BOOKS.ADD.REQUEST,
+        status: 'loading',
+        books: state.books
+      };
+
+
+
+    // loan borrow
+    case BOOKS.BORROW.RESPONSE:
+      if(action.ok) {
+
+        _updateItems(state.books, action.item);
+
+        return {
+          status: BOOKS.BORROW.SUCCESS,
+          books: state.books,
+          message: ''
+        };
+      }
+
+      return {
+        status: BOOKS.BORROW.FAILED,
+        message: action.message || 'Unknown error',
+        books: state.books || []
+      };
+    case BOOKS.BORROW.REQUEST:
+      return {
+        action: BOOKS.BORROW.REQUEST,
+        status: 'loading',
+        books: state.books
+      };
+
+
+
+    // loan return
+    case BOOKS.RETURN.RESPONSE:
+      if(action.ok) {
+
+        _updateItems(state.books, action.item);
+
+        return {
+          status: BOOKS.BORROW.SUCCESS,
+          books: state.books,
+          message: ''
+        };
+      }
+
+      return {
+        status: BOOKS.BORROW.FAILED,
+        message: action.message || 'Unknown error',
+        books: state.books || []
+      };
+    case BOOKS.RETURN.REQUEST:
+      return {
+        action: BOOKS.RETURN.REQUEST,
+        status: 'loading',
+        books: state.books
+      };
+
     default:
       return state;
   }

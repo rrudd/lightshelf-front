@@ -1,9 +1,9 @@
 import CONSTANTS from '../constants.js';
-const { PERMISSION, AUTHENTICATION } = CONSTANTS;
+const { AUTHENTICATION } = CONSTANTS;
 
 const initState = {
-		isAuthorized: localStorage.getItem('token') ? true : false,
-		message: '',
+		status: localStorage.hasOwnProperty('token') ? AUTHENTICATION.PERMISSION.GRANTED : AUTHENTICATION.PERMISSION.DENIED,
+		isAuthorized: localStorage.hasOwnProperty('token'),
 		token: localStorage.getItem('token') || ''
 	};
 // The auth reducer. The starting state sets authentication
@@ -12,27 +12,49 @@ const initState = {
 function auth( state = initState, action = {} ) {
 
 	switch (action.type) {
-		case AUTHENTICATION.REQUEST:
+		// login
+		case AUTHENTICATION.LOGIN.REQUEST:
 			return {
-				type: AUTHENTICATION.WAITING,
+				action: AUTHENTICATION.LOGIN.REQUEST,
+				status: 'loading',
 				isAuthorized: false
 			};
-		case AUTHENTICATION.RESPONSE:
+		case AUTHENTICATION.LOGIN.RESPONSE:
 			if(action.ok) {
 
 				localStorage.setItem('token', action.token);
 
 				return {
-					type: PERMISSION.GRANTED,
+					status: AUTHENTICATION.PERMISSION.GRANTED,
 					isAuthorized: true,
 					message: '',
 					token: action.token
 				};
 			}
 			return {
-				type: PERMISSION.DENIED,
+				status: AUTHENTICATION.PERMISSION.DENIED,
 				isAuthorized: false,
 				message: action.message
+			};
+
+
+		// register
+		case AUTHENTICATION.REGISTER.RESPONSE:
+			if(action.ok) {
+				return {
+					status: AUTHENTICATION.PERMISSION.DENIED,
+					isAuthorized: false
+				}
+			}
+			return {
+				status: AUTHENTICATION.PERMISSION.DENIED,
+				isAuthorized: false,
+				message: action.message
+			};
+		case AUTHENTICATION.REGISTER.REQUEST:
+			return {
+				action: AUTHENTICATION.REGISTER.REQUEST,
+				status: 'loading'
 			};
 		default:
 			return state;

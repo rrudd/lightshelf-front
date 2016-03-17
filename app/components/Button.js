@@ -33,7 +33,7 @@ export default class Button extends React.Component {
     if(confirm) {
       return (
           <div>
-            <span style={styles.text}>Confirm add?</span>
+            <span style={styles.text}>Confirm { this.props.text }?</span>
             <button
                 style={styles.no}
                 onClick={this.handleNo}

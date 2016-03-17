@@ -5,9 +5,9 @@ import StatusIcon from './StatusIcon';
 import StatusMessage from './StatusMessage';
 import { connect } from 'react-redux';
 import actions from '../actions/books.js';
-const { loan, returnBook, add } = actions;
+const { borrow, returnBook, add } = actions;
 
-class SearchResult extends React.Component {
+class BookCard extends React.Component {
   constructor() {
     super();
     this.state = { added: false };
@@ -21,7 +21,7 @@ class SearchResult extends React.Component {
       this.props.dispatch(add(this.props.item, this.props.token))
     }
     else if (this.props.purpose === 'borrow') {
-      this.props.dispatch(loan(this.props.item, this.props.token));
+      this.props.dispatch(borrow(this.props.item, this.props.token));
     }
     else if (this.props.purpose === 'return') {
       this.props.dispatch(returnBook(this.props.item, this.props.item.current_loan, this.props.token));
@@ -74,7 +74,7 @@ class SearchResult extends React.Component {
   }
 }
 
-SearchResult.propTypes = {
+BookCard.propTypes = {
   item: React.PropTypes.object,
   identifier: React.PropTypes.string,
   purpose: React.PropTypes.string
@@ -92,4 +92,4 @@ export default connect(
         dispatch
       }
     }
-)(SearchResult)
+)(BookCard)

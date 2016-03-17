@@ -3,13 +3,16 @@ import BookCard from '../components/BookCard';
 import Loader from '../components/Loader';
 import { connect } from 'react-redux';
 import actions from '../actions/books.js';
+import CONSTANTS from '../constants';
 
 class Library extends React.Component {
   constructor() {
     super();
   }
   componentDidMount() {
-    this.props.dispatch(actions.list(this.props.token))
+    if(this.props.status !== CONSTANTS.BOOKS.LIST.SUCCESS) {
+      this.props.dispatch(actions.list(this.props.token))
+    }
   }
 
   render() {

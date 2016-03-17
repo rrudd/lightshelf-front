@@ -1,70 +1,24 @@
 import CONSTANTS from '../constants';
 import go from './router.js';
-const { BOOKS, LOAN } = CONSTANTS;
-const GOOGLE_BASE_URL = 'https://www.googleapis.com/books/v1/volumes?q=';
+const { BOOKS } = CONSTANTS;
 
-function searchSuccess(items) {
+function borrowSuccess(item) {
   return {
-    type: BOOKS.RESPONSE,
-    ok: true,
-    searchResults: items
-  }
-}
-
-function searchError(error) {
-  return {
-    type: BOOKS.RESPONSE,
-    ok: false,
-    message: error
-  }
-}
-
-function searchGoogle(query, token) {
-  const config = {
-      method: 'GET'
-    },
-    searchType = '&printType=books';
-
-  return (dispatch) => {
-    // We dispatch requestLogin to kickoff the call to the API
-    // dispatch(requestLogin(action.creds));
-
-    dispatch({
-      type: BOOKS.SEARCH
-    });
-
-    return fetch(GOOGLE_BASE_URL + encodeURIComponent(query) + searchType, config)
-      .then((resp) => {
-        return resp.json()
-      })
-      .then(
-        ({items}) => {
-          dispatch(searchSuccess(items));
-        },
-        (error) => {
-          dispatch(searchError(error));
-        }
-      ).catch(err => console.log('Error: ', err));
-  };
-}
-
-function loanSuccess(item) {
-  return {
-    type: LOAN.RESPONSE,
+    type: BOOKS.BORROW.RESPONSE,
     ok: true,
     item
   }
 }
 
-function loanError(error) {
+function borrowError(error) {
   return {
-    type: LOAN.RESPONSE,
+    type: BOOKS.BORROW.RESPONSE,
     ok: false,
     message: error
   }
 }
 
-function loan(book, token) {
+function borrow(book, token) {
   const config = {
       method: 'POST',
       headers: new Headers({'Authorization': 'JWT ' + token, 'Content-Type': 'application/json' })
@@ -78,7 +32,7 @@ function loan(book, token) {
     // dispatch(requestLogin(action.creds));
 
     dispatch({
-      type: LOAN.REQUEST
+      type: BOOKS.BORROW.REQUEST
     });
 
     let url = API_URL + resource + "/" + book._id + "/" + action;
@@ -89,14 +43,31 @@ function loan(book, token) {
       })
       .then(
       ({ book }) => {
-        dispatch(loanSuccess(book));
+        dispatch(borrowSuccess(book));
       },
       (error) => {
-        dispatch(loanError(error));
+        dispatch(borrowError(error));
         dispatch(go(''));
       }
     ).catch(err => console.log('Error: ', err));
   };
+}
+
+
+function returnSuccess(item) {
+  return {
+    type: BOOKS.RETURN.RESPONSE,
+    ok: true,
+    item
+  }
+}
+
+function returnError(error) {
+  return {
+    type: BOOKS.RETURN.RESPONSE,
+    ok: false,
+    message: error
+  }
 }
 
 function returnBook(book, loan_id, token) {
@@ -114,7 +85,7 @@ function returnBook(book, loan_id, token) {
     // dispatch(requestLogin(action.creds));
 
     dispatch({
-      type: LOAN.RETURN
+      type: BOOKS.RETURN.REQUEST
     });
 
     return fetch( API_URL + resource
@@ -127,14 +98,18 @@ function returnBook(book, loan_id, token) {
       })
       .then(
       ({ item }) => {
-        dispatch(loanSuccess(item));
+        dispatch(returnSuccess(item));
       },
       (error) => {
-        dispatch(loanError(error));
+        dispatch(returnError(error));
       }
     ).catch(err => console.log('Error: ', err));
   };
 }
+
+
+
+
 
 function list(token) {
 
@@ -147,7 +122,7 @@ function list(token) {
   return (dispatch) => {
 
     dispatch({
-      type: BOOKS.LIST
+      type: BOOKS.LIST.REQUEST
     });
 
     return fetch(API_URL + resource, config)
@@ -170,7 +145,7 @@ function list(token) {
 
 function listSuccess(items) {
   return {
-    type: BOOKS.RESPONSE,
+    type: BOOKS.LIST.RESPONSE,
     ok: true,
     books: items
   }
@@ -178,18 +153,21 @@ function listSuccess(items) {
 
 function listError(error) {
   return {
-    type: BOOKS.RESPONSE,
+    type: BOOKS.LIST.RESPONSE,
     ok: false,
     message: error
   }
 }
+
+
+
 
 function add(book, token) {
 
   return (dispatch)=> {
 
     dispatch({
-      type: BOOKS.ADD
+      type: BOOKS.ADD.REQUEST
     });
 
     const request = new Request(API_URL + 'books', {
@@ -217,7 +195,7 @@ function add(book, token) {
 
 function addSuccess(book) {
   return {
-    type: BOOKS.RESPONSE,
+    type: BOOKS.ADD.RESPONSE,
     ok: true,
     book: book
   }
@@ -225,15 +203,14 @@ function addSuccess(book) {
 
 function addError(error) {
   return {
-    type: BOOKS.RESPONSE,
+    type: BOOKS.ADD.RESPONSE,
     ok: false,
     message: error
   }
 }
 
 export default {
-  searchGoogle,
-  loan,
+  borrow,
   returnBook,
   list,
   add

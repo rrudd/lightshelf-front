@@ -1,27 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { connect } from 'react-redux';
+import actions from '../actions/auth';
+const { register } = actions;
 
-export default class Register extends React.Component {
+class Register extends React.Component {
   constructor() {
     super();
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.state = { statusMsg: '' };
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    this.setState({ statusMsg: '' });
     let username = ReactDOM.findDOMNode(this.refs.username).value;
     let password = ReactDOM.findDOMNode(this.refs.password).value;
 
-    $.post('http://localhost:3333/api/auth/register', { username, password })
-      .done(data => {
-        this.setState({ statusMsg: data.message });
-      }).fail(jqxhr => {
-        this.setState({ statusMsg: JSON.parse(jqxhr.responseText).message });
-      });
-    username = '';
-    password = '';
+    this.props.dispatch(register({ username, password }))
   }
 
   render() {
@@ -53,9 +47,22 @@ export default class Register extends React.Component {
               </button>
             </div>
           </div>
-          <div className="row">{this.state.statusMsg}</div>
+          <div className="row">{this.props.message}</div>
         </form>
       </div>
     </div>);
   }
 }
+
+export default connect(
+    (state)=> {
+      return {
+        message: state.auth.message || ''
+      }
+    },
+    (dispatch)=> {
+      return {
+        dispatch
+      }
+    }
+)(Register)
