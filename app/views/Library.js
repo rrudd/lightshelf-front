@@ -17,7 +17,7 @@ class Library extends React.Component {
 
   render() {
     let books = [];
-    const loading = this.props.status === 'loading';
+    const loading = this.props.status === 'loading' && this.props.action === CONSTANTS.BOOKS.LIST.REQUEST;
     books = this.props.books.map((book) =>
       <BookCard
         key={book.id}

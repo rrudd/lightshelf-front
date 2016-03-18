@@ -1,11 +1,12 @@
 import React from 'react';
-import BookModal from './BookModal';
+import Loader from '../components/Loader';
 import Button from './Button';
 import StatusIcon from './StatusIcon';
 import StatusMessage from './StatusMessage';
 import { connect } from 'react-redux';
 import actions from '../actions/books.js';
 const { borrow, returnBook, add } = actions;
+import CONSTANTS from '../constants';
 
 class BookCard extends React.Component {
   constructor() {
@@ -46,6 +47,10 @@ class BookCard extends React.Component {
       icon: 'fa fa-check'
     };
 
+    const loading = this.props.status === 'loading'
+          && (this.props.action === CONSTANTS.BOOKS.BORROW.REQUEST ||
+              this.props.action === CONSTANTS.BOOKS.RETURN.REQUEST);
+
     const icon = (action === 'add') ? 'fa fa-plus' : '';
     return (
       <div className="card row" id={book.id}>
@@ -59,15 +64,17 @@ class BookCard extends React.Component {
           <div><b>{book.title}</b></div>
           <div>{authorString}</div>
         </div>
-        <div className="three columns centralize card-field">
-          {action !== 'add' ? <StatusIcon active={activeLoan} /> : null}
-          { !this.state.added ? <Button
-            text={action}
-            icon={icon}
-            handleClick={this.clickHandler}
-            requireConfirm={true}
-          /> : <StatusMessage contents={addedMessage}/>}
-        </div>
+        { (loading) ? <Loader /> :
+          <div className="three columns centralize card-field">
+            {action !== 'add' ? <StatusIcon active={activeLoan} /> : null}
+            { !this.state.added ? <Button
+              text={action}
+              icon={icon}
+              handleClick={this.clickHandler}
+              requireConfirm={true}
+            /> : <StatusMessage contents={addedMessage}/>}
+          </div>
+        }
       </div>
     );
   }
@@ -83,7 +90,9 @@ BookCard.propTypes = {
 export default connect(
     (state)=> {
       return {
-        token: state.auth.token
+        token: state.auth.token,
+        action: state.books.action,
+        status: state.books.status,
       }
     },
     (dispatch)=> {
