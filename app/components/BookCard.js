@@ -15,7 +15,6 @@ class BookCard extends React.Component {
   }
 
   clickHandler() {
-    let k = 1;
     if (this.props.purpose === 'add') {
       this.setState({added: true});
       this.props.dispatch(add(this.props.item, this.props.token))

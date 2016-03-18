@@ -40,8 +40,8 @@ function borrow(book, token) {
     return fetch(url, config)
       .then((resp) => errorHandler(resp, dispatch))
       .then(
-      ({ item }) => {
-        dispatch(borrowSuccess(item));
+      ({ book }) => {
+        dispatch(borrowSuccess(book));
       },
       (error) => {
         dispatch(borrowError(error));

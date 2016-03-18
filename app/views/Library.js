@@ -23,7 +23,7 @@ class Library extends React.Component {
         key={book.id}
         item={book}
         identifier={book.id}
-        purpose="borrow"
+        purpose={book.current_loan ? 'return' : 'borrow'}
       />);
     return (
       <div className="first-component">
@@ -40,6 +40,7 @@ class Library extends React.Component {
 export default connect(
   (state) => ({
     status: state.books.status,
+    action: state.books.action,
     books: state.books.books || [],
     token: state.auth.token,
   }),
