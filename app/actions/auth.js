@@ -72,16 +72,16 @@ function register(creds) {
 	return (dispatch)=> {
 		return fetch(API_URL + 'auth/register', config)
 			.then(response =>
-				response.json().then(user => ({ user, response }))
-		).then(({ user, response }) => {
+				response.json().then(user => ({ user, message, response }))
+		).then(({ user, message }) => {
 				if (!response.ok) {
 					// If there was a problem, we want to
 					// dispatch the error condition
 					dispatch(registerError(user.message));
-					return Promise.reject(user);
+					return Promise.reject(user, message);
 				}
 				// Dispatch the success action
-				dispatch(registerSuccess(user.token));
+				dispatch(registerSuccess());
 				dispatch(go('library'));
 			}).catch(err => console.log('Error: ', err));
 	}
@@ -95,11 +95,12 @@ function registerError(message) {
 	}
 }
 
-function registerSuccess() {
+function registerSuccess(user, message) {
 	return {
 		type: AUTHENTICATION.REGISTER.RESPONSE,
 		ok: true,
-		token
+		user,
+		message,
 	}
 }
 
