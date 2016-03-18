@@ -2,8 +2,18 @@ import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import Button from './Button';
+import auth from '../actions/auth';
 
 class Header extends React.Component {
+
+  constructor() {
+      super();
+      this.logout = this.logout.bind(this)
+  }
+
+  logout() {
+    this.props.dispatch(auth.logout())
+  }
 
   render() {
 
@@ -30,6 +40,12 @@ class Header extends React.Component {
                 icon="fa fa-search"
             />
           </Link>
+          <Button
+                handleClick={this.logout}
+                text=""
+                type="nav-btn"
+                icon="fa fa-sign-out"
+          />
         </div>
       </div>
         : null }
@@ -42,5 +58,10 @@ export default connect(
       return {
         isAuthorized: state.auth.isAuthorized
       }
+    },
+    (dispatch)=> {
+        return {
+            dispatch
+        }
     }
 )(Header)

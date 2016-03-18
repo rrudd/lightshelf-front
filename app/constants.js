@@ -47,6 +47,7 @@ export default {
       REQUEST: 'LOGIN_REQUEST',
       RESPONSE: 'LOGIN_RESPONSE',
     },
+    LOGOUT: 'LOGOUT',
     REGISTER: {
       REQUEST: 'REGISTER_REQUEST',
       RESPONSE: 'REGISTER_RESPONSE',

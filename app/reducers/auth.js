@@ -37,6 +37,16 @@ function auth( state = initState, action = {} ) {
 				message: action.message
 			};
 
+		// logout
+		case AUTHENTICATION.LOGOUT:
+
+			localStorage.removeItem('token');
+
+			return {
+				status: AUTHENTICATION.PERMISSION.DENIED,
+				isAuthorized: false,
+				token: '',
+			};
 
 		// register
 		case AUTHENTICATION.REGISTER.RESPONSE:

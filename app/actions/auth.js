@@ -48,6 +48,18 @@ function login(creds) {
 }
 
 
+function logout() {
+
+	return (dispatch)=> {
+		dispatch({
+			type: AUTHENTICATION.LOGOUT
+		});
+		dispatch(go(''))
+	}
+
+}
+
+
 
 function register(creds) {
 
@@ -93,6 +105,7 @@ function registerSuccess() {
 
 export default {
 	login,
+	logout,
 	register,
 	loginSuccess
 }

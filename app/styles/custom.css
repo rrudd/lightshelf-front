@@ -40,6 +40,7 @@
   margin: 5px;
   background-color: #36185F;
   color: white;
+  padding: 0 20px;
 }
 
 .nav-btn:hover, .nav-btn:focus {
