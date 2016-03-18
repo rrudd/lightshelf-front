@@ -30,9 +30,10 @@ export default class SearchField extends React.Component {
                 <input
                   type="text"
                   className="u-full-width"
-                  placeholder="Title, author, etc..."
+                  placeholder="Title, author, etc."
                   ref="search"
                   onChange={this.handleChange}
+                  defaultValue={this.props.query}
                 />
               </div>
               <div className="three columns">
@@ -52,4 +53,5 @@ export default class SearchField extends React.Component {
 
 SearchField.propTypes = {
   searchSubmit: React.PropTypes.func,
+  query: React.PropTypes.string,
 };

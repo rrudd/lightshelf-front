@@ -38,7 +38,7 @@ class Search extends React.Component {
 
     return (
       <div className="first-component">
-        <SearchField searchSubmit={this.searchSubmit}/>
+        <SearchField searchSubmit={this.searchSubmit} query={this.props.query} />
         <div id="resultlist" className="resultlist">
           {loading ? <Loader /> : results}
         </div>
@@ -50,6 +50,7 @@ class Search extends React.Component {
 const mapStateToProps = (state) => ({
   status: state.search.status,
   results: state.search.results || [],
+  query: state.search.query || null,
   token: state.auth.token,
 });
 const mapDispatchToProps = (dispatch) => ({
