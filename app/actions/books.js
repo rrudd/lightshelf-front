@@ -33,7 +33,7 @@ function borrow(book, token) {
     // We dispatch requestLogin to kickoff the call to the API
     // dispatch(requestLogin(action.creds));
 
-    dispatch({ type: BOOKS.BORROW.REQUEST });
+    dispatch({ type: BOOKS.BORROW.REQUEST, book: book });
 
     const url = `${API_URL}${resource}/${book._id}/${action}`;
 
@@ -85,7 +85,7 @@ function returnBook(book, loanID, token) {
     // We dispatch requestLogin to kickoff the call to the API
     // dispatch(requestLogin(action.creds));
 
-    dispatch({ type: BOOKS.RETURN.REQUEST });
+    dispatch({ type: BOOKS.RETURN.REQUEST, book: book });
 
     const url = `${API_URL}${resource}/${book._id}/${subResource}/${loanID}/${action}`;
 
@@ -164,7 +164,7 @@ function addError(error) {
 
 function add(book, token) {
   return (dispatch) => {
-    dispatch({ type: BOOKS.ADD.REQUEST });
+    dispatch({ type: BOOKS.ADD.REQUEST, book: book });
 
     const headers = new Headers({
       Accept: 'application/json',

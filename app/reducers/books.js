@@ -66,7 +66,8 @@ function books(state = initstate, action = {}) {
       return {
         action: BOOKS.ADD.REQUEST,
         status: 'loading',
-        books: state.books
+        books: state.books,
+        target: action.book
       };
 
 
@@ -93,7 +94,8 @@ function books(state = initstate, action = {}) {
       return {
         action: BOOKS.BORROW.REQUEST,
         status: 'loading',
-        books: state.books
+        books: state.books,
+        target: action.book
       };
 
 
@@ -120,7 +122,8 @@ function books(state = initstate, action = {}) {
       return {
         action: BOOKS.RETURN.REQUEST,
         status: 'loading',
-        books: state.books
+        books: state.books,
+        target: action.book
       };
 
     default:

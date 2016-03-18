@@ -48,6 +48,7 @@ class BookCard extends React.Component {
     };
 
     const loading = this.props.status === 'loading'
+          && this.props.target._id === book._id
           && (this.props.action === CONSTANTS.BOOKS.BORROW.REQUEST ||
               this.props.action === CONSTANTS.BOOKS.RETURN.REQUEST);
 
@@ -93,6 +94,7 @@ export default connect(
         token: state.auth.token,
         action: state.books.action,
         status: state.books.status,
+        target: state.books.target || {},
       }
     },
     (dispatch)=> {
