@@ -51,6 +51,9 @@ class Login extends React.Component {
               placeholder="Password"
             />
           </div>
+
+          <p style={{color: 'red'}}>{errorMessage}</p>
+
         </div>
         <div className="three columns">
           <Button
@@ -60,9 +63,8 @@ class Login extends React.Component {
             text="Login"
           />
         </div>
-        <span>Not registered? Register <a href="#" onClick={(e)=> this.onGoToRegistration(e)}>here</a></span>
 
-        <p>{errorMessage}</p>
+        <span style={{fontSize: '0.8em'}}>Not registered? Register <a href="#" onClick={(e)=> this.onGoToRegistration(e)}>here</a></span>
 
       </div>
     );

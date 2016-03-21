@@ -4,7 +4,8 @@ const { AUTHENTICATION } = CONSTANTS;
 const initState = {
 		status: localStorage.hasOwnProperty('token') ? AUTHENTICATION.PERMISSION.GRANTED : AUTHENTICATION.PERMISSION.DENIED,
 		isAuthorized: localStorage.hasOwnProperty('token'),
-		token: localStorage.getItem('token') || ''
+		token: localStorage.getItem('token') || '',
+		user: JSON.parse(localStorage.getItem('user')) || {}
 	};
 // The auth reducer. The starting state sets authentication
 // based on a token being in local storage. In a real app,
@@ -23,12 +24,14 @@ function auth( state = initState, action = {} ) {
 			if(action.ok) {
 
 				localStorage.setItem('token', action.token);
+				localStorage.setItem('user', JSON.stringify(action.user));
 
 				return {
 					status: AUTHENTICATION.PERMISSION.GRANTED,
 					isAuthorized: true,
 					message: '',
-					token: action.token
+					token: action.token,
+					user: action.user
 				};
 			}
 			return {
@@ -41,11 +44,13 @@ function auth( state = initState, action = {} ) {
 		case AUTHENTICATION.LOGOUT:
 
 			localStorage.removeItem('token');
+			localStorage.removeItem('user');
 
 			return {
 				status: AUTHENTICATION.PERMISSION.DENIED,
 				isAuthorized: false,
 				token: '',
+				user: {}
 			};
 
 		// register

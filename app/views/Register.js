@@ -8,15 +8,25 @@ import go from '../actions/router';
 class Register extends React.Component {
   constructor() {
     super();
+    this.state = {message: ''};
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    let username = ReactDOM.findDOMNode(this.refs.username).value;
-    let password = ReactDOM.findDOMNode(this.refs.password).value;
+    let password = ReactDOM.findDOMNode(this.refs.password).value,
+        password2 = ReactDOM.findDOMNode(this.refs.password2).value;
+    if(password !== password2) {
+      this.setState({message: "Passwords doesn't match"});
+      return;
+    }
+    else {
+      this.setState({message: ""});
+    }
+    let fullname = ReactDOM.findDOMNode(this.refs.fullname).value,
+        username = ReactDOM.findDOMNode(this.refs.username).value;
 
-    this.props.dispatch(register({ username, password }))
+    this.props.dispatch(register({ fullname, username, password }))
   }
 
   onGoToLogin(e) {
@@ -33,6 +43,13 @@ class Register extends React.Component {
           <div className="row">
             <div className="nine columns">
               <input
+                  type="text"
+                  name="fullname"
+                  className="u-full-width"
+                  placeholder="Full name"
+                  ref="fullname"
+              />
+              <input
                 type="text"
                 name="username"
                 className="u-full-width"
@@ -46,7 +63,20 @@ class Register extends React.Component {
                 placeholder="Password"
                 ref="password"
               />
+              <input
+                  type="password"
+                  name="password2"
+                  className="u-full-width"
+                  placeholder="Confirm password"
+                  ref="password2"
+              />
             </div>
+
+            <div className="row" style={{marginBottom: '1rem', color: 'red'}}>
+              {this.props.message}
+              {this.state.message}
+            </div>
+
             <div className="three columns">
               <button type="submit" className="button-primary-netlight">
                 <i className=""></i> Submit
@@ -54,9 +84,8 @@ class Register extends React.Component {
             </div>
           </div>
           <div className="row">
-            <span>Allready registered? Login <a href="#" onClick={(e)=> this.onGoToLogin(e)}>here</a></span>
+            <span style={{fontSize: '0.8em'}}>Allready registered? Login <a href="#" onClick={(e)=> this.onGoToLogin(e)}>here</a></span>
           </div>
-          <div className="row">{this.props.message}</div>
         </form>
       </div>
     </div>);

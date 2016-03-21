@@ -3,11 +3,12 @@ const { AUTHENTICATION } = CONSTANTS;
 import go from './router.js';
 import errorHandler from './error';
 
-function loginSuccess(token) {
+function loginSuccess(user, token) {
 	return {
 		type: AUTHENTICATION.LOGIN.RESPONSE,
 		ok: true,
-		token: token
+		token: token,
+		user
 	};
 }
 
@@ -34,9 +35,9 @@ function login(creds) {
 			.then((response) => {
 				return errorHandler(response, dispatch)
 			}).then(
-				(resp) => {
+				({token, user}) => {
 					let w = 1;
-					dispatch( loginSuccess(resp.token) );
+					dispatch( loginSuccess(user, token) );
 					dispatch( go('library') );
 				},
 				(error)=> {
@@ -66,24 +67,26 @@ function register(creds) {
 	const config = {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-		body: `username=${creds.username}&password=${creds.password}`
+		body: `username=${creds.username}&password=${creds.password}&fullname=${creds.fullname}`
 	};
 
 	return (dispatch)=> {
 		return fetch(API_URL + 'auth/register', config)
-			.then(response =>
-				response.json().then(user => ({ user, message, response }))
-		).then(({ user, message }) => {
-				if (!response.ok) {
+			.then((response)=> {
+				return errorHandler(response, dispatch)
+			}
+			).then(
+				({ user, message }) => {
+					// Dispatch the success action
+					dispatch(registerSuccess());
+					dispatch(go('login'));
+				},
+				(err)=> {
 					// If there was a problem, we want to
 					// dispatch the error condition
-					dispatch(registerError(user.message));
-					return Promise.reject(user, message);
-				}
-				// Dispatch the success action
-				dispatch(registerSuccess());
-				dispatch(go('library'));
-			}).catch(err => console.log('Error: ', err));
+					dispatch(registerError(err.message));
+					}
+			).catch(err => console.log('Error: ', err));
 	}
 }
 
