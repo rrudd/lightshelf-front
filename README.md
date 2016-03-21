@@ -24,7 +24,7 @@ Production:
 
 Before running the application in production you need to configure the Webpack global `API_URL` found in the `./webpack.config.js` to point to a production build of the [lightshelf-api](https://github.com/rrudd/lightshelf-api).
 
-`npm run prod`
+`npm run prod && npm start`
 
 # Contribute
 
