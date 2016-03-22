@@ -6,13 +6,18 @@ import go from '../actions/router';
 
 class Login extends React.Component {
 
+  constructor() {
+    super();
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
   componentWillMount() {
     if(this.props.isAuthorized) {
       this.props.dispatch(auth.loginSuccess(this.props.token))
     }
   }
 
-  onLoginClick() {
+  handleSubmit() {
     const username = this.refs.username;
     const password = this.refs.password;
 
@@ -34,15 +39,19 @@ class Login extends React.Component {
 
     return (
       <div className="row first-component centralize">
+        <form onSubmit={this.handleSubmit}>
         <div className="nine columns">
+
           <h1>Login</h1>
-          <div className="row"></div>
+          <div className="row">
             <input
               type="text"
               ref="username"
               className="form-control u-full-width"
               placeholder="Username"
+              autoFocus={true}
             />
+          </div>
           <div className="row">
             <input
               type="password"
@@ -52,20 +61,20 @@ class Login extends React.Component {
             />
           </div>
 
+
           <p style={{color: 'red'}}>{errorMessage}</p>
 
         </div>
         <div className="three columns">
-          <Button
-            handleClick={(event) => this.onLoginClick(event)}
-            type="btn btn-netlight-primary"
-            icon="fa fa-sign-in"
-            text="Login"
-          />
+
+          <button type="submit" className="btn btn-netlight-primary">
+            <i className="fa fa-sign-in"></i> Login
+          </button>
+
         </div>
 
         <span style={{fontSize: '0.8em'}}>Not registered? Register <a href="#" onClick={(e)=> this.onGoToRegistration(e)}>here</a></span>
-
+        </form>
       </div>
     );
   }
