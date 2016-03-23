@@ -2,13 +2,17 @@ import React from 'react';
 
 export default class statusIcon extends React.Component {
   render() {
-    let icon = '';
-    let text = '';
-    let style = {};
-    if (this.props.active) {
+    let icon = '',
+        text = '',
+        style = {};
+
+    const loan = this.props.loan,
+        user = this.props.user;
+
+    if (loan) {
       icon = 'fa fa-remove';
-      text = `Not available.`;
       style = { color: 'red' };
+      text = loan.user._id === user.id ? `You have it`: `Not available, ${user.fullname} has it.`;
     } else {
       icon = 'fa fa-check';
       text = 'Available';
@@ -29,5 +33,6 @@ export default class statusIcon extends React.Component {
 }
 
 statusIcon.propTypes = {
-  active: React.PropTypes.bool
+  loan: React.PropTypes.object,
+  user: React.PropTypes.object,
 };

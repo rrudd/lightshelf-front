@@ -10,7 +10,6 @@ export default class Button extends React.Component {
 
     if(!!props.requireConfirm) {
       this.clickHandler = ()=> {
-        let k = 0;
         this.setState({confirm: true});
       }
     }

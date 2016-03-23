@@ -24,21 +24,23 @@ class BookCard extends React.Component {
       this.props.dispatch(borrow(this.props.item, this.props.token));
     }
     else if (this.props.purpose === 'return') {
-      this.props.dispatch(returnBook(this.props.item, this.props.item.current_loan, this.props.token));
+      this.props.dispatch(returnBook(this.props.item, this.props.item.current_loan._id, this.props.token));
     }
   }
 
   render() {
-    const book = this.props.item;
+    const book = this.props.item,
+        loan = book.current_loan,
+        user = this.props.user,
+        actionAvailable = loan !== null && user.id !== loan.user._id;
+
     book.imageLinks = book.imageLinks ? book.imageLinks : {};
     book.authors = book.authors ? book.authors : ['Unknown author'];
     book.id = this.props.identifier;
     const authorString = (book.authors !== []) ? book.authors.join(', ') : '';
     let action = this.props.purpose;
-    let activeLoan = false;
 
-    if (book.current_loan) {
-      activeLoan = true;
+    if (loan) {
       action = 'return';
     }
 
@@ -67,12 +69,13 @@ class BookCard extends React.Component {
         </div>
         { (loading) ? <Loader /> :
           <div className="three columns centralize card-field">
-            {action !== 'add' ? <StatusIcon active={activeLoan} /> : null}
+            {action !== 'add' ? <StatusIcon loan={loan} user={user} /> : null}
             { !this.state.added ? <Button
               text={action}
               icon={icon}
               handleClick={this.clickHandler}
               requireConfirm={true}
+              disabled={actionAvailable}
             /> : <StatusMessage contents={addedMessage}/>}
           </div>
         }
@@ -84,7 +87,7 @@ class BookCard extends React.Component {
 BookCard.propTypes = {
   item: React.PropTypes.object,
   identifier: React.PropTypes.string,
-  purpose: React.PropTypes.string
+  purpose: React.PropTypes.string,
 };
 
 
@@ -95,6 +98,7 @@ export default connect(
         action: state.books.action,
         status: state.books.status,
         target: state.books.target || {},
+        user : state.auth.user,
       }
     },
     (dispatch)=> {
