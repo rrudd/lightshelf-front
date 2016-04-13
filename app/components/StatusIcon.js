@@ -12,7 +12,7 @@ export default class statusIcon extends React.Component {
     if (loan) {
       icon = 'fa fa-remove';
       style = { color: 'red' };
-      text = loan.user._id === user.id ? `You have it`: `Not available, ${loan.user.fullname} has it.`;
+      text = loan.user._id === user.id ? `You have it`: `${loan.user.fullname} has it.`;
     } else {
       icon = 'fa fa-check';
       text = 'Available';

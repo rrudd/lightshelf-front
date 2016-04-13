@@ -60,7 +60,7 @@ class BookCard extends React.Component {
         <div className="three columns centralize card-field">
           <img
             className="thumb-s"
-            src={book.imageLinks.smallThumbnail}
+            src={book.imageLinks.thumbnail}
           ></img>
         </div>
         <div className="six columns card-field">
