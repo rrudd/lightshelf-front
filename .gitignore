@@ -39,5 +39,8 @@ Vagrantfile
 # OSX
 .DS_Store
 
+#Visual Studio code
+.vscode
+
 # production
 public

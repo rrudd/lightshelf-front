@@ -15,7 +15,7 @@ module.exports = {
     index: './main.js'
   },
   output: {
-    path: './public',
+    path: __dirname + '/public',
     filename: 'index.js'
   },
   plugins: [
@@ -47,7 +47,7 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel',
+        loader: 'babel-loader',
         query: {
           presets: ['es2015', 'react']
         }
