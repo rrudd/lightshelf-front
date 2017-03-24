@@ -2,24 +2,25 @@ var webpack = require('webpack');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var path = require('path');
 
-var PROD = process.argv[2].indexOf('p') > -1;
+module.exports = function (env) {
+  let prod = env.production;
 
-var GLOBALS = {
-  'ENV': !PROD ? '"development"' : '"production"',
-  'API_URL': !PROD ? '"http://localhost:3333/api/"' : '"https://lightshelf-api.herokuapp.com/api/"'
-};
+  let globals = {
+    'ENV': !prod ? '"development"' : '"production"',
+    'API_URL': !prod ? '"http://localhost:3333/api/"' : '"https://lightshelf-api.herokuapp.com/api/"'
+  };
 
-module.exports = {
-  context: path.join(__dirname, 'app'),
-  entry: {
-    index: './main.js'
-  },
-  output: {
-    path: __dirname + '/public',
-    filename: 'index.js'
-  },
-  plugins: [
-      new webpack.DefinePlugin(GLOBALS),
+  return {
+    context: path.join(__dirname, 'app'),
+    entry: {
+      index: './main.js'
+    },
+    output: {
+      path: __dirname + '/public',
+      filename: 'index.js'
+    },
+    plugins: [
+      new webpack.DefinePlugin(globals),
       new CopyWebpackPlugin([
         {
           from: 'index.html',
@@ -34,24 +35,25 @@ module.exports = {
           force: true
         }
       ])
-  ].concat(!PROD ? [] : [
-          new webpack.optimize.UglifyJsPlugin()
-      ]),
-  devServer: {
-    inline: true,
-    port: 8080,
-    contentBase: "../public"
-  },
-  module: {
-    loaders: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader',
-        query: {
-          presets: ['es2015', 'react']
+    ].concat(!prod ? [] : [
+      new webpack.optimize.UglifyJsPlugin()
+    ]),
+    devServer: {
+      inline: true,
+      port: 8080,
+      contentBase: "../public"
+    },
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader',
+          options: {
+            presets: ['es2015', 'react']
+          }
         }
-      }
-    ]
-  }
-};
+      ]
+    }
+  };
+}

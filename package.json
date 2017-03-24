@@ -4,8 +4,8 @@
   "description": "A library app.",
   "main": "server.js",
   "scripts": {
-    "dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js -d",
-    "prod": "./node_modules/webpack/bin/webpack.js -p",
+    "dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --env.development",
+    "prod": "./node_modules/webpack/bin/webpack.js --env.production",
     "postinstall": "npm run prod",
     "start": "node server.js",
     "test": "jest"
