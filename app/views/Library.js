@@ -18,13 +18,21 @@ class Library extends React.Component {
   render() {
     let books = [];
     const loading = this.props.status === 'loading' && this.props.action === CONSTANTS.BOOKS.LIST.REQUEST;
-    books = this.props.books.map((book) =>
-      <BookCard
-        key={book.id}
-        item={book}
-        identifier={book.id}
-        purpose={book.current_loan ? 'return' : 'borrow'}
-      />);
+    if (this.props.books && this.props.books.length > 0) {
+      books = this.props.books.map((book) =>
+        <BookCard
+          key={book.id}
+          item={book}
+          identifier={book.id}
+          purpose={book.current_loan ? 'return' : 'borrow'}
+        />);
+    } else {
+      books =  (
+        <div className="row centralize">
+          <h5>No books found</h5>
+        </div>
+      );
+    }
     return (
       <div className="first-component">
         <div id="booklist" className="booklist row">

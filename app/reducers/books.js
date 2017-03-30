@@ -126,6 +126,28 @@ function books(state = initstate, action = {}) {
         target: action.book
       };
 
+      case BOOKS.FIND.RESPONSE:
+        if (action.ok) {
+
+        //Update the visible books state to mach the found books
+        state.books = action.items;
+
+         let message = (state.books.length == 0) ? 'No results' : '';
+         let status = (state.books.length == 0) ? BOOKS.FIND.FAILED : BOOKS.FIND.SUCCESS;
+
+        return {
+          status: status,
+          books: state.books,
+          message: message 
+        };
+      }
+
+        return {
+          status: BOOKS.FIND.FAILED,
+          message: action.message || 'Unknown error',
+          books: state.books || []
+        };
+
     default:
       return state;
   }

@@ -23,6 +23,11 @@
   text-align: center;
 }
 
+.inline-search {
+  display: inline;
+  color: black;
+}
+
 .highlight {
   color: #CC9933;
 }

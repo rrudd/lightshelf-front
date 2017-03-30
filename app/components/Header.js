@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import LibrarySearch from './LibrarySearch';
 import Button from './Button';
 import auth from '../actions/auth';
+import search from '../actions/search';
+import books from '../actions/books';
 
 class Header extends React.Component {
 
@@ -13,6 +16,14 @@ class Header extends React.Component {
 
   logout() {
     this.props.dispatch(auth.logout())
+  }
+
+  findInLibrary = (text) => {
+    if (text) {
+      this.props.dispatch(search.findBook(text, this.props.token));
+    } else {
+      this.props.dispatch(books.list(this.props.token));
+    }
   }
 
   render() {
@@ -26,6 +37,7 @@ class Header extends React.Component {
       { this.props.isAuthorized ?
       <div className="six columns">
         <div className="nav">
+          <LibrarySearch searchSubmit={this.findInLibrary}/>
           <Link to="/library">
             <Button
                 text="library"
@@ -56,7 +68,8 @@ class Header extends React.Component {
 export default connect(
     (state)=> {
       return {
-        isAuthorized: state.auth.isAuthorized
+        isAuthorized: state.auth.isAuthorized,
+        token: state.auth.token,
       }
     },
     (dispatch)=> {

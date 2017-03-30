@@ -1,7 +1,13 @@
 export default {
   // Action types
   BOOKS: {
-    FIND: 'FIND_BOOK',
+    FIND: {
+      REQUEST: 'FIND_BOOK_REQUEST',
+      RESPONSE: 'FIND_BOOK_RESPONSE',
+      // states
+      SUCCESS: 'FIND_BOOK_RETURN_SUCCESS',
+      FAILED: 'FIND_BOOK_RETURN_FAILED',
+    },
     LIST: {
       REQUEST: 'LIST_BOOKS_REQUEST',
       RESPONSE: 'LIST_BOOKS_RESPONSE',

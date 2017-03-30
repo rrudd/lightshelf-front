@@ -1,6 +1,7 @@
 import CONSTANTS from '../constants';
 import go from './router.js';
-const { SEARCH } = CONSTANTS;
+import errorHandler from './error'
+const { SEARCH, BOOKS } = CONSTANTS;
 const GOOGLE_BASE_URL = 'https://www.googleapis.com/books/v1/volumes?q=';
 
 function searchSuccess(items) {
@@ -17,6 +18,21 @@ function searchError(error) {
     ok: false,
     message: error,
   };
+}
+
+function findBookSuccess(books) {
+  return {
+    type: BOOKS.FIND.RESPONSE,
+    ok: true,
+    items: books
+  }
+}
+function findBookError(error) {
+  return {
+    type: BOOKS.FIND.RESPONSE,
+    ok: false,
+    message: error 
+  }
 }
 
 function search(query) {
@@ -47,6 +63,39 @@ function search(query) {
   };
 }
 
+function findBook(query, token) {
+  const headers = new Headers({
+    Authorization: `JWT ${token}`,
+    'Content-Type': 'application/json',
+  });
+  const config = {
+    method: 'GET',
+    headers,
+  };
+
+  const url = `${API_URL}books/find?title=${query}`;
+
+  return (dispatch) => {
+
+    dispatch({
+      type: BOOKS.FIND.REQUEST,
+      query,
+    });
+
+    return fetch(url, config)
+      .then((resp) => errorHandler(resp, dispatch))
+      .then(
+      ({ books }) => {
+        dispatch(findBookSuccess(books));
+      },
+      (error) => {
+        dispatch(findBookError(error));
+      }
+      ).catch(err => console.log('Error: ', err));
+  };
+}
+
 export default {
   search,
+  findBook,
 };
