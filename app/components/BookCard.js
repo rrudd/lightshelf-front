@@ -32,7 +32,8 @@ class BookCard extends React.Component {
     const book = this.props.item,
         loan = book.current_loan,
         user = this.props.user,
-        actionAvailable = loan !== null && user.id !== loan.user._id;
+        actionAvailable = (loan !== null && typeof loan !== 'undefined') 
+          && user.id !== loan.user._id;
 
     book.imageLinks = book.imageLinks ? book.imageLinks : {};
     book.authors = book.authors ? book.authors : ['Unknown author'];
@@ -88,6 +89,7 @@ BookCard.propTypes = {
   item: React.PropTypes.object,
   identifier: React.PropTypes.string,
   purpose: React.PropTypes.string,
+  user: React.PropTypes.object
 };
 
 
