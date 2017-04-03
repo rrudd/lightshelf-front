@@ -190,10 +190,19 @@ function add(book, token) {
   };
 }
 
+function filter(books) {
+  return {
+    type: BOOKS.FILTER,
+    ok: true,
+    books: books,
+  };
+}
+
 
 export default {
   borrow,
   returnBook,
   list,
+  filter,
   add,
 };

@@ -22,6 +22,12 @@ function _updateItems(books, newBook) {
 // we would also want a util to check if the token is expired.
 function books(state = initstate, action = {}) {
   switch (action.type) {
+    case BOOKS.FILTER:
+      return {
+        status: BOOKS.FILTER.SUCCESS,
+        books: action.books,
+        message: ''
+      };
     // list
     case BOOKS.LIST.RESPONSE:
       if(action.ok) {
@@ -125,28 +131,6 @@ function books(state = initstate, action = {}) {
         books: state.books,
         target: action.book
       };
-
-      case BOOKS.FIND.RESPONSE:
-        if (action.ok) {
-
-        //Update the visible books state to mach the found books
-        state.books = action.items;
-
-         let message = (state.books.length == 0) ? 'No results' : '';
-         let status = (state.books.length == 0) ? BOOKS.FIND.FAILED : BOOKS.FIND.SUCCESS;
-
-        return {
-          status: status,
-          books: state.books,
-          message: message 
-        };
-      }
-
-        return {
-          status: BOOKS.FIND.FAILED,
-          message: action.message || 'Unknown error',
-          books: state.books || []
-        };
 
     default:
       return state;

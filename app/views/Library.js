@@ -19,11 +19,16 @@ class Library extends React.Component {
 
   findInLibrary = (text) => {
     if (text) {
-      this.props.dispatch(search.findBook(text, this.props.token));
+      let filteredBooks = this.props.books.filter((book) => {
+        //Partial, case insensitive match
+        let regex = new RegExp(text, "i");
+        if (book.title.match(regex)) return book;
+      });
+      this.props.dispatch(books.filter(filteredBooks));
     } else {
       this.props.dispatch(books.list(this.props.token));
     }
-  }
+}
 
   render() {
     let books = [];
