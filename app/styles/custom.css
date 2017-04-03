@@ -23,9 +23,11 @@
   text-align: center;
 }
 
-.inline-search {
-  display: inline;
+.library-search {
   color: black;
+}
+.library-search > input {
+  width: 100%;
 }
 
 .highlight {

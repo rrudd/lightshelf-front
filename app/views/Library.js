@@ -1,9 +1,11 @@
 import React from 'react';
 import BookCard from '../components/BookCard';
 import Loader from '../components/Loader';
+import LibrarySearch from '../components/LibrarySearch';
 import { connect } from 'react-redux';
-import actions from '../actions/books.js';
 import CONSTANTS from '../constants';
+import search from '../actions/search';
+import books from '../actions/books';
 
 class Library extends React.Component {
   constructor() {
@@ -11,7 +13,15 @@ class Library extends React.Component {
   }
   componentDidMount() {
     if (this.props.status !== CONSTANTS.BOOKS.LIST.SUCCESS) {
-      this.props.dispatch(actions.list(this.props.token));
+      this.props.dispatch(books.list(this.props.token));
+    }
+  }
+
+  findInLibrary = (text) => {
+    if (text) {
+      this.props.dispatch(search.findBook(text, this.props.token));
+    } else {
+      this.props.dispatch(books.list(this.props.token));
     }
   }
 
@@ -35,6 +45,7 @@ class Library extends React.Component {
     }
     return (
       <div className="first-component">
+        <LibrarySearch searchSubmit={this.findInLibrary} />
         <div id="booklist" className="booklist row">
           <div className="twelve columns">
             {(loading) ? <Loader /> : books}

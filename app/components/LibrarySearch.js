@@ -9,7 +9,7 @@ class LibrarySearch extends React.Component {
 
     render() {
         return(
-            <form className="inline-search" onSubmit={this.handleSubmit}>
+            <form className="library-search" onSubmit={this.handleSubmit}>
             <input
                 type="text"
                 placeholder="Search book"
