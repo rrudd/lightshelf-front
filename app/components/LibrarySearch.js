@@ -7,7 +7,7 @@ class LibrarySearch extends React.Component {
         this.props.searchSubmit(this.searchInput.value);
     }
 
-    handleKeyDown = (event) => {
+    handleKeyUp= (event) => {
         this.props.searchSubmit(this.searchInput.value);
     }
 
@@ -16,7 +16,7 @@ class LibrarySearch extends React.Component {
             <form className="library-search" onSubmit={this.handleSubmit}>
             <input
                 type="text"
-                onKeyUp={this.handleKeyDown}
+                onKeyUp={this.handleKeyUp}
                 placeholder="Search book"
                 ref={(input) => { this.searchInput = input; }}
             />
