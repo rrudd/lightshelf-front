@@ -56,7 +56,8 @@ class Library extends React.Component {
       books =  (
         <div className="row centralize">
           <h5>No books found in library</h5>
-          <Link to="/search"><button onClick={this.searchBookFromGoogle}>Add book</button> 
+          <Link tabIndex="-1" to="/search">
+            <button className="button-primary-netlight"  onClick={this.searchBookFromGoogle}>Add book</button> 
           </Link>
         </div>
       );
