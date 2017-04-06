@@ -32,7 +32,7 @@ class Library extends React.Component {
       let filteredBooks = this.props.books.filter((book) => {
         //Partial, case insensitive match
         let regex = new RegExp(text, "i");
-        if (book.title.match(regex)) return book;
+        if (book.bookInfo.title.match(regex)) return book;
       });
       this.props.dispatch(books.filter(filteredBooks));
     } else {

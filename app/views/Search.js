@@ -20,10 +20,10 @@ class Search extends React.Component {
     const loading = this.props.status === 'loading';
 
     if (this.props.results) {
-      results = this.props.results.map(item =>
+      results = this.props.results.map(item => 
         <BookCard
           key={item.id}
-          item={ item.volumeInfo }
+          item={{id: item.id, bookInfo: item.volumeInfo}}
           identifier={item.id}
           purpose="add"
         />

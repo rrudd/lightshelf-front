@@ -30,15 +30,16 @@ class BookCard extends React.Component {
 
   render() {
     const book = this.props.item,
+        bookInfo = this.props.item.bookInfo ? this.props.item.bookInfo : {},
         loan = book.current_loan,
         user = this.props.user,
         actionAvailable = (loan !== null && typeof loan !== 'undefined') 
           && user.id !== loan.user._id;
 
-    book.imageLinks = book.imageLinks ? book.imageLinks : {};
-    book.authors = book.authors ? book.authors : ['Unknown author'];
+    bookInfo.imageLinks = bookInfo.imageLinks ? bookInfo.imageLinks : {};
+    bookInfo.authors = bookInfo.authors ? bookInfo.authors : ['Unknown author'];
     book.id = this.props.identifier;
-    const authorString = (book.authors !== []) ? book.authors.join(', ') : '';
+    const authorString = (bookInfo.authors !== []) ? bookInfo.authors.join(', ') : '';
     let action = this.props.purpose;
 
     if (loan) {
@@ -61,11 +62,11 @@ class BookCard extends React.Component {
         <div className="three columns centralize card-field">
           <img
             className="thumb-s"
-            src={book.imageLinks.thumbnail}
+            src={bookInfo.imageLinks.thumbnail}
           ></img>
         </div>
         <div className="six columns card-field">
-          <div><b>{book.title}</b></div>
+          <div><b>{bookInfo.title}</b></div>
           <div>{authorString}</div>
         </div>
         { (loading) ? <Loader /> :
