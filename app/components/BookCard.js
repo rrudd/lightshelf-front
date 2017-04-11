@@ -28,13 +28,49 @@ class BookCard extends React.Component {
     }
   }
 
+  /**
+   * 
+   */
+  numberOfBooksAvailableForLoan = (loans) => {
+    let count = 0;
+    if (loans) {
+      loans.forEach((loan) => {
+        if (loan === null) count++;
+      })
+
+    }
+    return count;
+  }
+
+  isBorrowedByMe = (loans) => {
+    let isBorrowedByMe = [];
+    if (loans) {
+      isBorrowedByMe = loans.filter((loan) => {
+        return (loan !== null && (loan.user._id === this.props.user.id));
+      });
+    }
+    return isBorrowedByMe.length > 0;
+  }
+
+  isAnyCopyAvailable = (loans) => {
+    let result = false;
+    if (loans) {
+      loans.forEach((loan) => {
+        if (loan === null) result= true;
+      });
+    }
+    return result;
+  }
+
   render() {
     const book = this.props.item,
         bookInfo = this.props.item.bookInfo ? this.props.item.bookInfo : {},
-        loan = book.current_loan,
+        loans = book.loans,
+        numberOfCopiesAvailable = this.numberOfBooksAvailableForLoan(loans),
         user = this.props.user,
-        actionAvailable = (loan !== null && typeof loan !== 'undefined') 
-          && user.id !== loan.user._id;
+        isBorrowedByMe = this.isBorrowedByMe(loans),
+        actionAvailable =  this.isAnyCopyAvailable(loans)
+         || isBorrowedByMe || this.props.purpose === 'add'; 
 
     bookInfo.imageLinks = bookInfo.imageLinks ? bookInfo.imageLinks : {};
     bookInfo.authors = bookInfo.authors ? bookInfo.authors : ['Unknown author'];
@@ -42,7 +78,7 @@ class BookCard extends React.Component {
     const authorString = (bookInfo.authors !== []) ? bookInfo.authors.join(', ') : '';
     let action = this.props.purpose;
 
-    if (loan) {
+    if (isBorrowedByMe) {
       action = 'return';
     }
 
@@ -71,13 +107,13 @@ class BookCard extends React.Component {
         </div>
         { (loading) ? <Loader /> :
           <div className="three columns centralize card-field">
-            {action !== 'add' ? <StatusIcon loan={loan} user={user} /> : null}
+            {action !== 'add' ? <StatusIcon user={user} availableCopies={numberOfCopiesAvailable} isBorrowedByMe={isBorrowedByMe} /> : null}
             { !this.state.added ? <Button
               text={action}
               icon={icon}
               handleClick={this.clickHandler}
               requireConfirm={true}
-              disabled={actionAvailable}
+              disabled={!actionAvailable}
             /> : <StatusMessage contents={addedMessage}/>}
           </div>
         }
