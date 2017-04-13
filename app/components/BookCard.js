@@ -16,21 +16,20 @@ class BookCard extends React.Component {
   }
 
   clickHandler() {
-    if (this.props.purpose === 'add') {
+    let action = this.getAction(this.isBorrowedByMe(this.props.item.loans));
+
+    if (action === 'add') {
       this.setState({added: true});
-      this.props.dispatch(add(this.props.item, this.props.token))
+      this.props.dispatch(add(this.props.item, this.props.token, arguments[0].numberOfCopies))
     }
-    else if (this.props.purpose === 'borrow') {
+    else if (action === 'borrow') {
       this.props.dispatch(borrow(this.props.item, this.props.token));
     }
-    else if (this.props.purpose === 'return') {
+    else if (action === 'return') {
       this.props.dispatch(returnBook(this.props.item, this.props.item.current_loan._id, this.props.token));
     }
   }
 
-  /**
-   * 
-   */
   numberOfBooksAvailableForLoan = (loans) => {
     let count = 0;
     if (loans) {
@@ -62,6 +61,14 @@ class BookCard extends React.Component {
     return result;
   }
 
+  getAction = (isBorrowedByMe) => {
+    if (this.props.purpose) {
+      return this.props.purpose;
+    } else {
+      return isBorrowedByMe ? 'return' : 'borrow';
+    }
+  }
+
   render() {
     const book = this.props.item,
         bookInfo = this.props.item.bookInfo ? this.props.item.bookInfo : {},
@@ -69,6 +76,7 @@ class BookCard extends React.Component {
         numberOfCopiesAvailable = this.numberOfBooksAvailableForLoan(loans),
         user = this.props.user,
         isBorrowedByMe = this.isBorrowedByMe(loans),
+        action = this.getAction(isBorrowedByMe),
         actionAvailable =  this.isAnyCopyAvailable(loans)
          || isBorrowedByMe || this.props.purpose === 'add'; 
 
@@ -76,11 +84,6 @@ class BookCard extends React.Component {
     bookInfo.authors = bookInfo.authors ? bookInfo.authors : ['Unknown author'];
     book.id = this.props.identifier;
     const authorString = (bookInfo.authors !== []) ? bookInfo.authors.join(', ') : '';
-    let action = this.props.purpose;
-
-    if (isBorrowedByMe) {
-      action = 'return';
-    }
 
     let addedMessage = {
       message: 'Added',

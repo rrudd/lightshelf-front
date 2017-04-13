@@ -1,4 +1,5 @@
 import React from 'react';
+import ConfirmButton from './ConfirmButton';
 
 export default class Button extends React.Component {
 
@@ -20,6 +21,9 @@ export default class Button extends React.Component {
 
   handleYes(e) {
     this.setState({confirm: false});
+    if (e.numberOfCopies) {
+      arguments.numberOfCopies = e.numberOfCopies;
+    }
     this.props.handleClick(arguments);
   };
 
@@ -31,24 +35,7 @@ export default class Button extends React.Component {
     let confirm = this.state.confirm || false;
     if(confirm) {
       return (
-          <div>
-            <span style={styles.text}>Confirm { this.props.text }?</span>
-            <button
-                style={styles.no}
-                onClick={this.handleNo}
-                className='no-btn'
-            >
-              <i className='fa fa-close'></i> no
-            </button>
-
-            <button
-                style={styles.yes}
-              onClick={this.handleYes}
-              className='yes-btn'
-            >
-              <i className='fa fa-check'></i> yes
-            </button>
-          </div>
+        <ConfirmButton styles={styles} text={this.props.text} handleYes={this.handleYes} handleNo={this.handleNo} />
       );
     }
     else {

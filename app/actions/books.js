@@ -35,7 +35,7 @@ function borrow(book, token) {
 
     dispatch({ type: BOOKS.BORROW.REQUEST, book: book });
 
-    const url = `${API_URL}${resource}/${book._id}/${action}`;
+    const url = `${API_URL}${resource}/${book.id}/${action}`;
 
     return fetch(url, config)
       .then((resp) => errorHandler(resp, dispatch))
@@ -146,11 +146,11 @@ function list(token) {
   };
 }
 
-function addSuccess(book) {
+function addSuccess(books) {
   return {
     type: BOOKS.ADD.RESPONSE,
     ok: true,
-    book,
+    books,
   };
 }
 
@@ -162,7 +162,7 @@ function addError(error) {
   };
 }
 
-function add(book, token) {
+function add(book, token, numberOfCopies) {
   return (dispatch) => {
     dispatch({ type: BOOKS.ADD.REQUEST, book: book });
 
@@ -171,6 +171,7 @@ function add(book, token) {
       Authorization: `JWT ${token}`,
       'Content-Type': 'application/json',
     });
+    book.numberOfCopies = numberOfCopies;
     const config = {
       method: 'POST',
       headers,
@@ -181,8 +182,8 @@ function add(book, token) {
     return fetch(url, config)
       .then((resp) => errorHandler(resp, dispatch))
       .then(
-      ({ book }) => {
-        dispatch(addSuccess(book));
+      ({ books }) => {
+        dispatch(addSuccess(books));
       },
       (error) => {
         dispatch(addError(error));

@@ -43,7 +43,7 @@ class Header extends React.Component {
           </Link>
           <Button
                 handleClick={this.logout}
-                text=""
+                text={this.props.user.fullname}
                 type="nav-btn"
                 icon="fa fa-sign-out"
           />
@@ -58,6 +58,7 @@ export default connect(
     (state)=> {
       return {
         isAuthorized: state.auth.isAuthorized,
+        user: state.auth.user,
         token: state.auth.token,
       }
     },

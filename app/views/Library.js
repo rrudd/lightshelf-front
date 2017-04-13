@@ -50,7 +50,6 @@ class Library extends React.Component {
           key={book.id}
           item={book}
           identifier={book.id}
-          purpose={book.current_loan ? 'return' : 'borrow'}
         />);
     } else {
       books =  (
