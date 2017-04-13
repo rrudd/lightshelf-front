@@ -11,7 +11,7 @@ import CONSTANTS from '../constants';
 class BookCard extends React.Component {
   constructor() {
     super();
-    this.state = { added: false };
+    this.state = { added: false,  expandDescription: false};
     this.clickHandler = this.clickHandler.bind(this);
   }
 
@@ -28,6 +28,11 @@ class BookCard extends React.Component {
     else if (action === 'return') {
       this.props.dispatch(returnBook(this.props.item, this.props.item.current_loan._id, this.props.token));
     }
+  }
+
+  expandDescriptionClick = () => {
+    let toggle = !this.state.expandDescription;
+    this.setState({expandDescription: toggle});
   }
 
   numberOfBooksAvailableForLoan = (loans) => {
@@ -69,6 +74,19 @@ class BookCard extends React.Component {
     }
   }
 
+  getDescription = () => {
+    let bookDescription = this.props.item.bookInfo.description;
+    if (this.state.expandDescription) {
+      return bookDescription;
+
+    } else {
+      if (bookDescription) {
+        let trimmedDesc = bookDescription.substring(0, 145);
+        return trimmedDesc.substring(0, trimmedDesc.lastIndexOf(" ")) + "...";
+      } else return "";
+    }
+  }
+
   render() {
     const book = this.props.item,
         bookInfo = this.props.item.bookInfo ? this.props.item.bookInfo : {},
@@ -107,6 +125,9 @@ class BookCard extends React.Component {
         <div className="six columns card-field">
           <div><b>{bookInfo.title}</b></div>
           <div>{authorString}</div>
+          <div>{this.getDescription()}</div>
+          {!this.state.expandDescription ? <Button icon="fa fa-angle-down" handleClick={this.expandDescriptionClick}></Button> 
+            : <Button icon="fa fa-angle-up" handleClick={this.expandDescriptionClick}></Button>}
         </div>
         { (loading) ? <Loader /> :
           <div className="three columns centralize card-field">
