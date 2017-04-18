@@ -60,6 +60,11 @@ button:disabled {
   opacity: 0.4 !important;
 }
 
+button.show-more, button.show-less {
+  border-style: none;
+  width: 100%;
+}
+
 .button-primary-netlight {
   color: white;
   background-color: #CC9933;

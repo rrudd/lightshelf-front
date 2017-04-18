@@ -87,6 +87,29 @@ class BookCard extends React.Component {
     }
   }
 
+  getCurrentLoans = () => {
+    let loanRows = [];
+    if (this.props.item) {
+      this.props.item.loans.forEach((loan) => {
+        if (loan !== null) {
+          loanRows.push(<li key={loan.user._id}>{loan.user.fullname}</li>)
+        }
+      })
+
+    }
+    if (loanRows.length > 0) {
+      return (
+        <div>
+          <br></br>
+          <strong>Current loans:</strong>
+          <ul>{loanRows}</ul>
+        </div>
+      )
+    } else {
+      return ""
+    }
+  }
+
   render() {
     const book = this.props.item,
         bookInfo = this.props.item.bookInfo ? this.props.item.bookInfo : {},
@@ -95,8 +118,7 @@ class BookCard extends React.Component {
         user = this.props.user,
         isBorrowedByMe = this.isBorrowedByMe(loans),
         action = this.getAction(isBorrowedByMe),
-        actionAvailable =  this.isAnyCopyAvailable(loans)
-         || isBorrowedByMe || this.props.purpose === 'add'; 
+        actionAvailable =  this.isAnyCopyAvailable(loans) || isBorrowedByMe || this.props.purpose === 'add'; 
 
     bookInfo.imageLinks = bookInfo.imageLinks ? bookInfo.imageLinks : {};
     bookInfo.authors = bookInfo.authors ? bookInfo.authors : ['Unknown author'];
@@ -126,8 +148,9 @@ class BookCard extends React.Component {
           <div><b>{bookInfo.title}</b></div>
           <div>{authorString}</div>
           <div>{this.getDescription()}</div>
-          {!this.state.expandDescription ? <Button icon="fa fa-angle-down" handleClick={this.expandDescriptionClick}></Button> 
-            : <Button icon="fa fa-angle-up" handleClick={this.expandDescriptionClick}></Button>}
+          {this.state.expandDescription ? this.getCurrentLoans() : ""}
+          {!this.state.expandDescription ? <Button type="show-more" icon="fa fa-angle-down fa-2x" handleClick={this.expandDescriptionClick}></Button> 
+            : <Button type="show-less" icon="fa fa-angle-up fa-2x" handleClick={this.expandDescriptionClick}></Button>}
         </div>
         { (loading) ? <Loader /> :
           <div className="three columns centralize card-field">
