@@ -21,7 +21,7 @@ class Header extends React.Component {
     return (<div className="row header">
       <div className="six columns">
         <Link to="/">
-          <img className="logo u-max-full-width " src="./img/EPS_RGB_WHITE_10.png" />
+          <img className="logo u-max-full-width " src="./img/NL_logo_white_alpha.png" />
         </Link>
       </div>
       { this.props.isAuthorized ?
