@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "babel-jest": "*",
+    "babel-plugin-transform-class-properties": "^6.23.0",
     "eslint": "^3.17.1",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-jasmine": "^2.2.0",
@@ -43,7 +44,7 @@
     "react-addons-test-utils": "~15.4.2"
   },
   "jest": {
-    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
+    "transform": { "^.+\\.js$" : "<rootDir>/node_modules/babel-jest" },
     "unmockedModulePathPatterns": [
       "<rootDir>/node_modules/react",
       "<rootDir>/node_modules/react-dom",

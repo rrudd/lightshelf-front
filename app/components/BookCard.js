@@ -11,39 +11,119 @@ import CONSTANTS from '../constants';
 class BookCard extends React.Component {
   constructor() {
     super();
-    this.state = { added: false };
+    this.state = { added: false,  expandDescription: false};
     this.clickHandler = this.clickHandler.bind(this);
   }
 
   clickHandler() {
-    if (this.props.purpose === 'add') {
+    let action = this.getAction(this.isBorrowedByMe(this.props.item.loans));
+
+    if (action === 'add') {
       this.setState({added: true});
-      this.props.dispatch(add(this.props.item, this.props.token))
+      this.props.dispatch(add(this.props.item, this.props.token, arguments[0].numberOfCopies))
     }
-    else if (this.props.purpose === 'borrow') {
+    else if (action === 'borrow') {
       this.props.dispatch(borrow(this.props.item, this.props.token));
     }
-    else if (this.props.purpose === 'return') {
+    else if (action === 'return') {
       this.props.dispatch(returnBook(this.props.item, this.props.item.current_loan._id, this.props.token));
+    }
+  }
+
+  expandDescriptionClick = () => {
+    let toggle = !this.state.expandDescription;
+    this.setState({expandDescription: toggle});
+  }
+
+  numberOfBooksAvailableForLoan = (loans) => {
+    let count = 0;
+    if (loans) {
+      loans.forEach((loan) => {
+        if (loan === null) count++;
+      })
+
+    }
+    return count;
+  }
+
+  isBorrowedByMe = (loans) => {
+    let isBorrowedByMe = [];
+    if (loans) {
+      isBorrowedByMe = loans.filter((loan) => {
+        return (loan !== null && (loan.user._id === this.props.user.id));
+      });
+    }
+    return isBorrowedByMe.length > 0;
+  }
+
+  isAnyCopyAvailable = (loans) => {
+    let result = false;
+    if (loans) {
+      loans.forEach((loan) => {
+        if (loan === null) result= true;
+      });
+    }
+    return result;
+  }
+
+  getAction = (isBorrowedByMe) => {
+    if (this.props.purpose) {
+      return this.props.purpose;
+    } else {
+      return isBorrowedByMe ? 'return' : 'borrow';
+    }
+  }
+
+  getDescription = () => {
+    let bookDescription = this.props.item.bookInfo.description;
+    if (this.state.expandDescription) {
+      return bookDescription;
+
+    } else {
+      if (bookDescription) {
+        let trimmedDesc = bookDescription.substring(0, 145);
+        return trimmedDesc.substring(0, trimmedDesc.lastIndexOf(" ")) + "...";
+      } else return "";
+    }
+  }
+
+  getCurrentLoans = () => {
+    let loanRows = [];
+    if (this.props.item) {
+      this.props.item.loans.forEach((loan) => {
+        if (loan !== null) {
+          loanRows.push(<li key={loan.user._id}>{loan.user.fullname}</li>)
+        }
+      })
+
+    }
+    if (loanRows.length > 0) {
+      return (
+        <div>
+          <br></br>
+          <strong>Current loans:</strong>
+          <ul>{loanRows}</ul>
+        </div>
+      )
+    } else {
+      return ""
     }
   }
 
   render() {
     const book = this.props.item,
-        loan = book.current_loan,
+        bookInfo = this.props.item.bookInfo ? this.props.item.bookInfo : {},
+        loans = book.loans,
+        numberOfCopiesAvailable = this.numberOfBooksAvailableForLoan(loans),
         user = this.props.user,
-        actionAvailable = (loan !== null && typeof loan !== 'undefined') 
-          && user.id !== loan.user._id;
+        isBorrowedByMe = this.isBorrowedByMe(loans),
+        action = this.getAction(isBorrowedByMe),
+        actionAvailable =  this.isAnyCopyAvailable(loans) || isBorrowedByMe || this.props.purpose === 'add'; 
 
-    book.imageLinks = book.imageLinks ? book.imageLinks : {};
-    book.authors = book.authors ? book.authors : ['Unknown author'];
+    bookInfo.imageLinks = bookInfo.imageLinks ? bookInfo.imageLinks : {};
+    bookInfo.authors = bookInfo.authors ? bookInfo.authors : ['Unknown author'];
     book.id = this.props.identifier;
-    const authorString = (book.authors !== []) ? book.authors.join(', ') : '';
-    let action = this.props.purpose;
-
-    if (loan) {
-      action = 'return';
-    }
+    const authorString = (bookInfo.authors !== []) ? bookInfo.authors.join(', ') : '';
 
     let addedMessage = {
       message: 'Added',
@@ -61,22 +141,26 @@ class BookCard extends React.Component {
         <div className="three columns centralize card-field">
           <img
             className="thumb-s"
-            src={book.imageLinks.thumbnail}
+            src={bookInfo.imageLinks.thumbnail}
           ></img>
         </div>
         <div className="six columns card-field">
-          <div><b>{book.title}</b></div>
+          <div><b>{bookInfo.title}</b></div>
           <div>{authorString}</div>
+          <div>{this.getDescription()}</div>
+          {this.state.expandDescription ? this.getCurrentLoans() : ""}
+          {!this.state.expandDescription ? <Button type="show-more" icon="fa fa-angle-down fa-2x" handleClick={this.expandDescriptionClick}></Button> 
+            : <Button type="show-less" icon="fa fa-angle-up fa-2x" handleClick={this.expandDescriptionClick}></Button>}
         </div>
         { (loading) ? <Loader /> :
           <div className="three columns centralize card-field">
-            {action !== 'add' ? <StatusIcon loan={loan} user={user} /> : null}
+            {action !== 'add' ? <StatusIcon user={user} availableCopies={numberOfCopiesAvailable} isBorrowedByMe={isBorrowedByMe} /> : null}
             { !this.state.added ? <Button
               text={action}
               icon={icon}
               handleClick={this.clickHandler}
               requireConfirm={true}
-              disabled={actionAvailable}
+              disabled={!actionAvailable}
             /> : <StatusMessage contents={addedMessage}/>}
           </div>
         }

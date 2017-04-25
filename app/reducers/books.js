@@ -22,6 +22,12 @@ function _updateItems(books, newBook) {
 // we would also want a util to check if the token is expired.
 function books(state = initstate, action = {}) {
   switch (action.type) {
+    case BOOKS.FILTER:
+      return {
+        status: BOOKS.FILTER.SUCCESS,
+        books: action.books,
+        message: ''
+      };
     // list
     case BOOKS.LIST.RESPONSE:
       if(action.ok) {

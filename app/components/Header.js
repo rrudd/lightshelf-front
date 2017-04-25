@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import LibrarySearch from './LibrarySearch';
 import Button from './Button';
 import auth from '../actions/auth';
 
@@ -20,9 +21,13 @@ class Header extends React.Component {
     return (<div className="row header">
       <div className="six columns">
         <Link to="/">
-          <img className="logo u-max-full-width " src="./img/EPS_RGB_WHITE_10.png" />
+          <img className="logo u-max-full-width " src="./img/NL_logo_white_alpha.png" />
         </Link>
       </div>
+      <div className="six columns">
+      {this.props.isAuthorized ? <span><i className="fa fa-user"></i> {this.props.user.fullname}</span> : ""}
+      </div>
+
       { this.props.isAuthorized ?
       <div className="six columns">
         <div className="nav">
@@ -42,7 +47,7 @@ class Header extends React.Component {
           </Link>
           <Button
                 handleClick={this.logout}
-                text=""
+                text="logout"
                 type="nav-btn"
                 icon="fa fa-sign-out"
           />
@@ -56,7 +61,9 @@ class Header extends React.Component {
 export default connect(
     (state)=> {
       return {
-        isAuthorized: state.auth.isAuthorized
+        isAuthorized: state.auth.isAuthorized,
+        user: state.auth.user,
+        token: state.auth.token,
       }
     },
     (dispatch)=> {

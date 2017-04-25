@@ -6,23 +6,28 @@ export default class statusIcon extends React.Component {
         text = '',
         style = {};
 
-    const loan = this.props.loan,
-        user = this.props.user;
+  const user = this.props.user,
+    availableCopies = this.props.availableCopies;
 
-    if (loan) {
+    //Count null objects to see if any available
+    if (this.props.isBorrowedByMe) {
       icon = 'fa fa-remove';
       style = { color: 'red' };
-      text = loan.user._id === user.id ? `You have it`: `${loan.user.fullname} has it.`;
-    } else {
-      icon = 'fa fa-check';
+      text =  `You have it`;
+    } else if (availableCopies > 0) {
       text = 'Available';
       style = { color: 'green' };
+    } else {
+      //No copies available of this book
+      icon = 'fa fa-remove';
+      style = { color: 'red' };
+      text =  `No available copies`;
     }
 
     return (
       <div>
         <div className="row" style={style}>
-          <i className={icon} />
+          {icon ? <i className={icon} /> : availableCopies}
         </div>
         <div className="row" style={style}>
           {text}
@@ -33,6 +38,8 @@ export default class statusIcon extends React.Component {
 }
 
 statusIcon.propTypes = {
-  loan: React.PropTypes.object,
+  loans: React.PropTypes.object,
   user: React.PropTypes.object,
+  availableCopies: React.PropTypes.number,
+  isBorrowedByMe: React.PropTypes.bool,
 };

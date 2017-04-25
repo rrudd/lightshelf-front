@@ -1,7 +1,10 @@
 export default {
   // Action types
   BOOKS: {
-    FIND: 'FIND_BOOK',
+    FILTER: {
+      SUCCESS: 'FIND_BOOK_FILTER_SUCCESS',
+      FAILED: 'FIND_BOOK_FILTER_FAILED',
+    },
     LIST: {
       REQUEST: 'LIST_BOOKS_REQUEST',
       RESPONSE: 'LIST_BOOKS_RESPONSE',

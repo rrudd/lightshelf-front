@@ -1,5 +1,6 @@
 import CONSTANTS from '../constants';
 import go from './router.js';
+import errorHandler from './error'
 const { SEARCH } = CONSTANTS;
 const GOOGLE_BASE_URL = 'https://www.googleapis.com/books/v1/volumes?q=';
 
@@ -46,6 +47,7 @@ function search(query) {
     ).catch(err => console.log('Error: ', err));
   };
 }
+
 
 export default {
   search,
